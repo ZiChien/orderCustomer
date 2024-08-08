@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import img1 from "../../assets/item1.jpeg";
 import SelectMtl from "./SelectMtl";
-import Counter from "./Counter";
+import Counter from "../../components/Counter";
 import { useSelector, useDispatch } from 'react-redux'
 import { addItem } from "../../store/cartSlice";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -10,9 +10,9 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
 MenuDialog.propTypes = {
     item: PropTypes.shape({
-        itemname: PropTypes.string.isRequired,
-        itemprice: PropTypes.number.isRequired,
-        iteminfo: PropTypes.string.isRequired
+        itemname: PropTypes.string,
+        itemprice: PropTypes.number,
+        iteminfo: PropTypes.string
     }).isRequired,
     mtl: PropTypes.any,
     handleClose: PropTypes.func.isRequired
@@ -110,6 +110,7 @@ function MenuDialog({ item, mtl, handleClose }) {
     const handleClickAddToCart = () => {
         if (!checkUserSelctMtl()) return
         const newItem = {
+            id: new Date().getTime(),
             item,
             amount,
             mtl: userSelectedMtl,

@@ -8,10 +8,13 @@ export const cartSlice = createSlice({
     reducers: {
         addItem: (state, action) => {
             state.value.push(action.payload)
+        },
+        setItem: (state, action) => {
+            state.value = action.payload
         }
     },
 })
-export const { addItem } = cartSlice.actions
+export const { addItem, setItem } = cartSlice.actions
 export const getAmount = (state) => {
     return state.cart.value.reduce((acc, item)=> acc + item.amount, 0)
 }

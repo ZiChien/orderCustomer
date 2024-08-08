@@ -4,13 +4,13 @@ import MenuBar from './MenuBar'
 import MenuDialog from './MenuDialog'
 import { apiGetmtl } from '../../api'
 import img1 from '../../assets/item1.jpeg'
-
+import { useSpring, animated, useTransition } from '@react-spring/web';
 
 Menu.propTypes = {
     isDialogOpen: PropTypes.bool.isRequired,
     setIsDialogOpen: PropTypes.func.isRequired
 };
-function Menu({isDialogOpen, setIsDialogOpen}) {
+function Menu({ isDialogOpen, setIsDialogOpen }) {
     // Add PropTypes validation
     const [menu, setMenu] = useState([])
     const [mtl, setMtl] = useState([])
@@ -111,12 +111,12 @@ function Menu({isDialogOpen, setIsDialogOpen}) {
         setCurrentCategory(category[0])
 
         // hanndle observe category in vewport 
-        
+
         const targets = document.querySelectorAll('.menuList');
         if (targets.length) {
             targets.forEach(target => observer.observe(target))
         }
-        return ()=>{
+        return () => {
             observer.disconnect()
         }
     }, [menu])
@@ -162,7 +162,12 @@ function Menu({isDialogOpen, setIsDialogOpen}) {
         setIsDialogOpen(false)
         document.body.style.overflow = 'auto'
     }
-
+    const transitions = useTransition(isDialogOpen, {
+        from: { opacity: 0 },
+        enter: { opacity: 1 },
+        leave: { opacity: 0 },
+        config: { duration: 100 }
+    });
 
     return (
         <>
@@ -170,7 +175,13 @@ function Menu({isDialogOpen, setIsDialogOpen}) {
             <div className='py-1'>
                 {menuList}
             </div>
-            {isDialogOpen && <MenuDialog item={dialogItem} mtl={mtl} handleClose={handleClose} />}
+            {transitions((style, isDialogOpen) => {
+                return (
+                    isDialogOpen && <animated.div style={style}>
+                        <MenuDialog item={dialogItem} mtl={mtl} handleClose={handleClose} />
+                    </animated.div>
+                )
+            })}
         </>
     )
 }
