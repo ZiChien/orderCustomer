@@ -1,13 +1,12 @@
 import { useState } from 'react'
 import Switch from '@mui/material/Switch'
-import { useDispatch } from 'react-redux';
+import { useDispatch,useSelector } from 'react-redux';
 import { setTableware } from '../../store/orderSlice';
 
-export default function Tableware({ isNeedTableware, setIsNeedTableware }) {
+export default function Tableware() {
     const dispatch = useDispatch()
+    const isNeedTableware = useSelector(state => state.order.tableware)
     const handleChange = () => {
-        console.log(isNeedTableware);
-        setIsNeedTableware(!isNeedTableware)
         dispatch(setTableware(!isNeedTableware))
     }
     return (

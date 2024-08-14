@@ -1,10 +1,12 @@
 import axios from 'axios'
 const instance = axios.create({
-    baseURL: 'http://192.168.1.138:3030/admin/',
+    baseURL: 'http://172.20.10.2:3030/admin/',
     timeout: 1000,
 })
 
 const apiMerchantInfo = () => instance.get(`api.getinfo`)
 const apiGetmtl = () => instance.get(`api.getmtl`)
+const apiGetDate = () => instance.get(`api.getdate`)
+const apiGetTime = () => instance.get(`api.gettime`)
 
-export { apiMerchantInfo, apiGetmtl }
+export { apiMerchantInfo, apiGetmtl, apiGetDate, apiGetTime }

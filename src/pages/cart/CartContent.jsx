@@ -7,6 +7,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import clsx from 'clsx';
 import { useNavigate } from 'react-router-dom';
+import { useTransition, animated } from '@react-spring/web';
+
 
 
 export default function CartContent() {
@@ -87,9 +89,16 @@ function CartCard({ item }) {
         dispatch(setItem(newCart))
     }
 
+    const transition = useTransition(isShowCounter, {
+        from: { x: -10, opacity: 0 },
+        enter: { x: 0, opacity: 1 },
+        leave: { x: -10, opacity: 0 },
+        // config: { duration: 150 },
+    })
+
     const mtls = item.mtl.map((mtl) => mtl.name).join(', ')
     return (
-        <div key={item.id} className='relative flex p-2 px-4 gap-4 items-center'>
+        <div className='relative flex p-2 px-4 gap-4 items-center'>
             <div ref={counterControlRef}>
                 <button onClick={handleShowCounter} className='w-[48px] h-[36px] bg-light-bg-theme rounded-lg flex items-center justify-center p-1 px-2 gap-1 border-2'>
                     <span className='text-xs font-semibold'>
@@ -99,12 +108,18 @@ function CartCard({ item }) {
                         <FontAwesomeIcon icon={faChevronDown} size='2xs' />
                     </div>
                 </button>
-                {isShowCounter &&
-                    <div ref={counterRef} className='h-full absolute top-0 left-16 flex items-center Counter'>
-                        <div className=' bg-light-bg-theme rounded-full p-2 z-20 Counter'>
-                            <Counter count={item.amount} handleClickPlus={handleClickPlus} handleClickMinus={handleClickMinus} minCount={0} />
-                        </div>
-                    </div>
+                {
+                    transition((style, isShowCounter) => {
+                        return (
+                            isShowCounter && (
+                                <animated.div style={style} ref={counterRef} className='h-full absolute top-0 left-16 z-20 flex items-center Counter mx-2'>
+                                    <div className=' bg-light-bg-theme rounded-full p-2 Counter border-2'>
+                                        <Counter count={item.amount} handleClickPlus={handleClickPlus} handleClickMinus={handleClickMinus} minCount={0} />
+                                    </div>
+                                </animated.div>
+                            )
+                        )
+                    })
                 }
             </div>
 

@@ -5,8 +5,10 @@ import { useNavigate } from 'react-router-dom'
 import CartContent from './CartContent.jsx'
 import PriceList from './PriceList.jsx'
 import Tableware from './Tableware.jsx'
+import Remark from './Remark.jsx'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faDollarSign } from '@fortawesome/free-solid-svg-icons'
+import { faDollarSign, faXmark } from '@fortawesome/free-solid-svg-icons'
+
 
 export default function Cart() {
     const navigate = useNavigate();
@@ -25,19 +27,18 @@ export default function Cart() {
 
     const [priceList, setPriceList] = useState([])
     const totalPrice = priceList.reduce((acc, item) => acc + item.price, 0)
-    
-    const tableware = useSelector(state => state.order.tableware)
-    const [isNeedTableware, setIsNeedTableware] = useState(tableware)
+
     return (
-        <div className=''>
-            <Navbar title={'購物車'} merchantName={merchantInfo.name} handleClick={handleClick} />
+        <>
+            <Navbar title={'購物車'} merchantName={merchantInfo.name} handleClick={handleClick} icon={<FontAwesomeIcon icon={faXmark} size='xl' />} />
             <div className='pb-[112px]'>
                 <CartContent />
                 <PriceList priceList={priceList} setPriceList={setPriceList} />
                 <ButtonToCheck totalPrice={totalPrice} />
-                <Tableware isNeedTableware={isNeedTableware} setIsNeedTableware={setIsNeedTableware} />
+                <Tableware />
+                <Remark />
             </div>
-        </div>
+        </>
     )
 }
 

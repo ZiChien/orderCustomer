@@ -1,7 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import PropTypes from 'prop-types';
 
 function PriceList({ priceList, setPriceList }) {
+    PriceList.propTypes = {
+        priceList: PropTypes.array,
+        setPriceList: PropTypes.func
+    }
     const cart = useSelector(state => state.cart.value)
     function getSubTotal() {
         return {
@@ -21,11 +26,9 @@ function PriceList({ priceList, setPriceList }) {
         const subTotal = getSubTotal()
         const serviceCharge = getServiceCharge()
         setPriceList([subTotal, serviceCharge])
-    }, [cart])
+    }, [cart])  
 
     const priceListNode = priceList.map((item) => {
-        console.log(priceList);
-
         return (
             <div key={item.id} className='flex justify-between px-4'>
                 <span className=' font-semibold text-sm'>{item.name}</span>
