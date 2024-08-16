@@ -11,6 +11,7 @@ import { faDollarSign, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 
 export default function Cart() {
+
     const navigate = useNavigate();
     const cart = useSelector(state => state.cart.value)
     const merchantInfo = useSelector(state => state.merchant.merchantInfo)
@@ -25,16 +26,15 @@ export default function Cart() {
         navigate('/order', { replace: true })
     }
 
-    const [priceList, setPriceList] = useState([])
-    const totalPrice = priceList.reduce((acc, item) => acc + item.price, 0)
-
     return (
         <>
             <Navbar title={'購物車'} merchantName={merchantInfo.name} handleClick={handleClick} icon={<FontAwesomeIcon icon={faXmark} size='xl' />} />
             <div className='pb-[112px]'>
                 <CartContent />
-                <PriceList priceList={priceList} setPriceList={setPriceList} />
-                <ButtonToCheck totalPrice={totalPrice} />
+                <div className='px-4'>
+                    <PriceList />
+                </div>
+                <ButtonToCheck />
                 <Tableware />
                 <Remark />
             </div>
@@ -42,7 +42,10 @@ export default function Cart() {
     )
 }
 
-function ButtonToCheck({ totalPrice }) {
+function ButtonToCheck() {
+    const priceList = useSelector(state => state.cart.priceList)
+    const totalPrice = priceList.reduce((acc, item) => acc + item.price, 0)
+    console.log(totalPrice);
     const navagate = useNavigate();
     const handleClick = () => {
         navagate('/check', { replace: true })
@@ -50,8 +53,8 @@ function ButtonToCheck({ totalPrice }) {
     return (
         <div className='  fixed bottom-0 z-30 left-0 w-full p-4'>
             <div className=' bg-light-bg-theme rounded-lg'>
-                <div className='px-4 py-2 flex justify-between items-center gap-1 text-base font-bold'>
-                    總支付費用:
+                <div className='px-4 py-2 flex justify-between items-center gap-1 text-sm font-medium'>
+                    應付金額:
                     <span className=''>
                         <FontAwesomeIcon icon={faDollarSign} size='sm' className='px-1' />
                         {totalPrice}

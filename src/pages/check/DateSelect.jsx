@@ -61,7 +61,9 @@ export default function DateSelect() {
 
     return (
         <div className="w-[48%] relative">
-            <button onClick={handleShowDateSelect} ref={dateBtnRef} className="w-full p-2 px-4 bg-light-bg-theme rounded-lg border-2 font-semibold border-light-bg-seconds flex justify-between">
+            <button onClick={handleShowDateSelect} ref={dateBtnRef} className={clsx('w-full p-2 px-4 border-light-bg-theme bg-light-bg-theme rounded-lg border-2 shadow-inner font-semibold flex justify-between', {
+                ' !border-button-check-border': isShowDateSelect
+            })}>
                 <span className="text-sm">{pickUpDate_Format}</span>
                 <FontAwesomeIcon icon={faChevronDown} />
             </button>

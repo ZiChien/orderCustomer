@@ -128,8 +128,8 @@ function MenuDialog({ item, mtl, handleClose }) {
                     <img src={img1} alt="" className="h-full w-full object-cover rounded-lg" />
                 </div>
                 <div className="px-2 py-4">
-                    <h3 className=" font-semibold my-1">{item.itemname}</h3>
-                    <p className=" font-semibold">{itemInfo}</p>
+                    <h4 className=" font-medium my-1">{item.itemname}</h4>
+                    <p className="text-sm font-medium">{itemInfo}</p>
                     <div className="py-4 divide-y-2">
                         {SelectMtlList}
                     </div>
@@ -137,7 +137,7 @@ function MenuDialog({ item, mtl, handleClose }) {
                 <div className="fixed left-0 bottom-0 bg-light-bg w-full px-8 py-3 border-t-2">
                     <div className="flex gap-8">
                         <Counter count={amount} handleClickPlus={handleClickPlus} handleClickMinus={handleClickMinus} minCount={1} />
-                        <button onClick={handleClickAddToCart} className=" grow py-3 bg-button-check text-white rounded-lg font-bold">加入購物車</button>
+                        <button onClick={handleClickAddToCart} className=" grow py-3     bg-button-check text-white rounded-lg font-semibold">加入購物車</button>
                     </div>
                 </div>
             </div>

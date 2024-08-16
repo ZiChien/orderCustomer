@@ -11,7 +11,7 @@ export default function Tableware() {
     }
     return (
         <div className='flex justify-between items-center p-4'>
-            <div><span className='text-base font-bold'>需要為您準備餐具嗎？</span></div>
+            <div><span className='text-base font-medium'>需要為您準備餐具嗎？</span></div>
             <div>
                 <Switch
                     checked={isNeedTableware}

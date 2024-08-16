@@ -1,12 +1,15 @@
 import { useEffect } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import PropTypes from 'prop-types';
+import { setPriceList } from '../../store/cartSlice';
 
-function PriceList({ priceList, setPriceList }) {
+function PriceList() {
     PriceList.propTypes = {
         priceList: PropTypes.array,
         setPriceList: PropTypes.func
     }
+    const dispatch = useDispatch()
+    const priceList = useSelector(state => state.cart.priceList)
     const cart = useSelector(state => state.cart.value)
     function getSubTotal() {
         return {
@@ -25,14 +28,14 @@ function PriceList({ priceList, setPriceList }) {
     useEffect(() => {
         const subTotal = getSubTotal()
         const serviceCharge = getServiceCharge()
-        setPriceList([subTotal, serviceCharge])
-    }, [cart])  
+        dispatch(setPriceList([subTotal, serviceCharge]))
+    }, [cart])
 
     const priceListNode = priceList.map((item) => {
         return (
-            <div key={item.id} className='flex justify-between px-4'>
-                <span className=' font-semibold text-sm'>{item.name}</span>
-                <span className=' font-semibold text-sm'>${item.price}</span>
+            <div key={item.id} className='flex justify-between'>
+                <span className='font-medium text-xs'>{item.name}</span>
+                <span className='font-medium text-xs'>${item.price}</span>
             </div>
         )
     })

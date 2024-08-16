@@ -2,24 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  font-family: "Noto Sans TC", sans-serif;
+}
+
 body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   @apply bg-light-bg
 }
-h1{
+
+h1 {
   @apply text-4xl
 }
-h2{
+
+h2 {
   @apply text-3xl
 }
-h3{
+
+h3 {
   @apply text-2xl
 }
-h4{
+
+h4 {
   @apply text-xl
 }
-h5{
+
+h5 {
   @apply text-lg
 }

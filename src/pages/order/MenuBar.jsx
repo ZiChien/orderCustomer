@@ -15,12 +15,12 @@ function MenuBar({ category, currentCategory, handleClickCategory }) {
     const barList = category.map((category) => {
         const currentClass = clsx('',
             {
-                'border-light-decoration opacity-100': category.displayName === currentCategory?.displayName,
+                'border-button-check opacity-100': category.displayName === currentCategory?.displayName,
                 'opacity-50': category.displayName !== currentCategory?.displayName
             })
         return (
             <button key={category.displayName} onClick={() => handleClick(category)}>
-                <div className={`${currentClass} inline-block pb-1 font-bold text-base border-b-4 text-light-title`}>
+                <div className={`${currentClass} inline-block pb-1 font-medium text-base border-b-4 text-button-check`}>
                     {category.displayName}
                 </div>
             </button>

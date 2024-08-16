@@ -62,7 +62,9 @@ export default function TimeSelect() {
 
     return (
         <div className="w-[48%] relative">
-            <button onClick={handleShowTimeSelect} ref={TimeBtnRef} className="w-full p-2 px-4 bg-light-bg-theme rounded-lg border-2 font-semibold border-light-bg-seconds flex justify-between">
+            <button onClick={handleShowTimeSelect} ref={TimeBtnRef} className={clsx('w-full p-2 px-4 border-light-bg-theme bg-light-bg-theme rounded-lg border-2 shadow-inner font-semibold flex justify-between',{
+                ' !border-button-check-border' : isShowTimeSelect
+            })}>
                 <span className="text-sm">{format}</span>
                 <FontAwesomeIcon icon={faChevronDown} />
             </button>

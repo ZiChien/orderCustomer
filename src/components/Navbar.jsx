@@ -10,7 +10,7 @@ function Navbar({ title, merchantName, handleClick, icon  }) {
             </button>
             <div className='flex flex-col pr-2'>
                 <h5 className=' font-semibold'>{title}</h5>
-                <span className=' text-xs'>{merchantName}</span>
+                <span className=' text-xs font-medium'>{merchantName}</span>
             </div>
         </div>
     )

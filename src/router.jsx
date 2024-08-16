@@ -3,6 +3,7 @@ import App from "./App.jsx";
 import Order from "./pages/order/Order.jsx";
 import Cart from "./pages/cart/Cart.jsx";
 import Check from './pages/check/Check.jsx';
+import Confirm from './pages/confirm/Confirm.jsx';
 
 // const router = createBrowserRouter([
 //     {
@@ -23,6 +24,7 @@ const router = createBrowserRouter(createRoutesFromElements(
         <Route path="order" element={<Order />} />
         <Route path="cart" element={<Cart />} />
         <Route path="check" element={<Check />} />
+        <Route path="confirm" element={<Confirm />} />
     </Route>
 ))
 

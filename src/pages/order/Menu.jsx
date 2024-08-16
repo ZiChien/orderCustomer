@@ -49,15 +49,16 @@ function Menu({ isDialogOpen, setIsDialogOpen }) {
 
 
     const productsList = (products) => {
-        return products.map((item) => {
+        const filterOnSupply = products.filter((item) => item.status[0] === true)
+        return filterOnSupply.map((item) => {
             const itemInfo = `$${item.itemprice} ${item.iteminfo}`
             return (
                 <button onClick={() => handleClick(item)} key={item.itemid} className='w-full py-3'>
                     <div className='flex justify-between'>
                         <div className=' flex-grow'>
                             <div className='flex flex-col items-start'>
-                                <span className=' font-semibold text-lg'>{item.itemname}</span>
-                                <span className=' font-semibold text-sm'>{itemInfo}</span>
+                                <span className=' font-medium text-lg'>{item.itemname}</span>
+                                <span className=' font-normal text-sm'>{itemInfo}</span>
                             </div>
                         </div>
                         <div className='w-[120px]'>
@@ -91,10 +92,10 @@ function Menu({ isDialogOpen, setIsDialogOpen }) {
                     }
                 }}>
                 <div className='my-1 flex items-baseline gap-2 '>
-                    <span className=' text-2xl font-semibold'>{item.categoryName}</span>
+                    <span className=' text-2xl font-medium'>{item.categoryName}</span>
                     <div className=' grow bg-black h-[2px]'></div>
                 </div>
-                <div className='flex flex-col my-6 divide-y-[2px] divide-solid'>
+                <div className='flex flex-col my-4 divide-y-[2px] divide-solid'>
                     {productsList(item.products)}
                 </div>
             </div>

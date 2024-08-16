@@ -13,8 +13,8 @@ function MerchantInfo() {
         <div className='my-6 py-1 flex flex-col gap-2'>
             <h2 className=" font-semibold">{merchantInfo.name}</h2>
             <div className='flex gap-2 items-center'>
-                <FontAwesomeIcon className=' text-light-decoration' icon={faLocationDot} />
-                <span className=' font-semibold'>{merchantInfo.address}</span>
+                <FontAwesomeIcon className=' text-button-check' icon={faLocationDot} size='sm' />
+                <span className='text-sm font-medium'>{merchantInfo.address}</span>
             </div>
         </div>
     );

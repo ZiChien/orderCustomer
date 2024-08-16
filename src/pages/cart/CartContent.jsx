@@ -128,13 +128,13 @@ function CartCard({ item }) {
                     <img src={img1} alt="" className='h-full object-cover rounded-lg' />
                 </div>
                 <div className='flex flex-col'>
-                    <span className=' font-bold text-base'>{item.item.itemname}</span>
-                    <span className=' font-bold text-xs'>
+                    <span className=' font-medium text-base'>{item.item.itemname}</span>
+                    <span className=' font-medium text-xs'>
                         {mtls}
                     </span>
                 </div>
                 <div className='justify-items-end ml-auto'>
-                    <span>${item.item.itemprice * item.amount}</span>
+                    <span className=' text-sm font-medium'>${item.item.itemprice * item.amount}</span>
                 </div>
             </div>
 
