@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import Navbar from '../../components/Navbar.jsx'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { getMerchantInfo } from '../../store/merchantSlice'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faDollarSign } from '@fortawesome/free-solid-svg-icons'
 import { useNavigate } from 'react-router-dom'
@@ -14,20 +15,23 @@ import Box from '@mui/material/Box';
 import { apiPostOrder } from '../../api.js'
 import dayjs from "dayjs";
 import { getAmount } from '../../store/cartSlice.js'
+import { persistor } from '../../store.js'
 
 export default function Check() {
+    const navigate = useNavigate();
+    const dispatch = useDispatch()
     const cart = useSelector(state => state.cart.value)
     const merchantInfo = useSelector(state => state.merchant.merchantInfo)
-    const navigate = useNavigate();
     useEffect(() => {
         if (cart.length === 0) {
             console.log('cart is empty');
             navigate('/order', { replace: true })
         }
+        dispatch(getMerchantInfo())
     }, [])
     return (
         <>
-            <Navbar title={'確認訂單'} merchantName={merchantInfo.name} icon={<FontAwesomeIcon icon={faArrowLeft} size='lg' />} handleClick={() => navigate('/cart', { replace: true })} />
+            <Navbar title={'確認訂單'} merchantName={merchantInfo?.name} icon={<FontAwesomeIcon icon={faArrowLeft} size='lg' />} handleClick={() => navigate('/cart', { replace: true })} />
             <div className='px-4 py-4 flex flex-col gap-6 pb-[112px]'>
                 <div className=''>
                     <h5 className=" text-base font-semibold my-2">取餐資訊</h5>
@@ -92,6 +96,7 @@ function ButtonToPlaceOrder() {
         console.log(order);
         try {
             const res = await apiPostOrder({ order: order })
+            persistor.purge()
             navagate('/confirm', { replace: true })
         } catch (error) {
             console.log(error);

@@ -5,10 +5,7 @@ import { apiMerchantInfo } from '../api'
 export const merchantSlice = createSlice({
     name: 'merchant',
     initialState: {
-        merchantInfo: {
-            name: '',
-            address: ''
-        }
+        merchantInfo: undefined,
     },
     reducers: {
         
@@ -31,11 +28,17 @@ export const merchantSlice = createSlice({
 
 export const getMerchantInfo = createAsyncThunk(
     'merchant/getMerchantInfo',
-    async () => {
-        const response = await apiMerchantInfo();
-        return response.data;
+    async (arg, thunkAPI) => {
+        const state = thunkAPI.getState()
+        if(state.merchant.merchantInfo === undefined){
+            console.log(state.merchant.merchantInfo);
+            
+            const response = await apiMerchantInfo();
+            return response.data;
+        }else{
+            return state.merchant.merchantInfo
+        }
     }
 )
-
 
 export default merchantSlice.reducer

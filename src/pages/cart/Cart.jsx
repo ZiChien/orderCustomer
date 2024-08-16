@@ -1,21 +1,26 @@
 import { useState, useEffect } from 'react'
-import Navbar from '../../components/Navbar.jsx'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
+import { getMerchantInfo } from '../../store/merchantSlice'
 import { useNavigate } from 'react-router-dom'
+
+import Navbar from '../../components/Navbar.jsx'
 import CartContent from './CartContent.jsx'
 import PriceList from './PriceList.jsx'
 import Tableware from './Tableware.jsx'
 import Remark from './Remark.jsx'
+
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDollarSign, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 
 export default function Cart() {
-
+    const dispatch = useDispatch()
     const navigate = useNavigate();
     const cart = useSelector(state => state.cart.value)
     const merchantInfo = useSelector(state => state.merchant.merchantInfo)
-
+    useEffect(() => {
+        dispatch(getMerchantInfo())
+    }, [])
     useEffect(() => {
         if (cart.length === 0) {
             navigate('/order', { replace: true })
@@ -28,7 +33,7 @@ export default function Cart() {
 
     return (
         <>
-            <Navbar title={'購物車'} merchantName={merchantInfo.name} handleClick={handleClick} icon={<FontAwesomeIcon icon={faXmark} size='xl' />} />
+            <Navbar title={'購物車'} merchantName={merchantInfo?.name} handleClick={handleClick} icon={<FontAwesomeIcon icon={faXmark} size='xl' />} />
             <div className='pb-[112px]'>
                 <CartContent />
                 <div className='px-4'>

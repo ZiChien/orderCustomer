@@ -1,7 +1,6 @@
-import { useState } from "react";
-import clsx from "clsx";
+import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setCustomer } from "../../store/orderSlice";
+import { getMerchantInfo } from "../../store/merchantSlice";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons'
 import DateSelect from "./DateSelect";
@@ -13,7 +12,10 @@ dayjs.extend(isToday);
 
 export default function Pickup() {
     const dispatch = useDispatch();
-    const merchant = useSelector(state => state.merchant.merchantInfo);
+    const merchantInfo = useSelector(state => state.merchant.merchantInfo)
+    useEffect(() => {
+        dispatch(getMerchantInfo())
+    }, [])
     const pickUpDate = useSelector(state => state.order.pickUpDate);
     const day = dayjs(pickUpDate)
 
@@ -26,8 +28,8 @@ export default function Pickup() {
                         <FontAwesomeIcon icon={faLocationDot} size="2xl" />
                     </div>
                     <div className="flex flex-col justify-center">
-                        <span className=" text-sm font-semibold">{merchant.name}</span>
-                        <span className=" text-xs">{merchant.address}</span>
+                        <span className=" text-sm font-semibold">{merchantInfo?.name}</span>
+                        <span className=" text-xs">{merchantInfo?.address}</span>
                     </div>
                 </div>
             </div>

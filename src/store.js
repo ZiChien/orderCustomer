@@ -22,9 +22,9 @@ const rootReducer = combineReducers({
 });
 
 const persistConfig = {
-  key: 'root', // 用於識別持久化數據的鍵
+  key: 'order', // 用於識別持久化數據的鍵
   storage,
-  whitelist: ['cart'] // 設置白名單，指定哪些 reducer 的狀態需要被持久化
+  whitelist: ['cart', 'order'] // 設置白名單，指定哪些 reducer 的狀態需要被持久化
 };
 // 創建持久化 reducer
 const persistedReducer = persistReducer(persistConfig, rootReducer);

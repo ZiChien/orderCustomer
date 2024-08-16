@@ -22,7 +22,7 @@ function SelectMtl({ index, mtl, handleSelectMtl, userSelectedMtl, isAlert }) {
     return (
         <div className="py-4 flex flex-col gap-3">
             <span className={clsx('font-medium text-sm ', { 'text-red-700': isAlert })}>(配料{index + 1})*請至少選擇一種</span>
-            <div className={`flex gap-2 flex-wrap rounded-lg ${alertDivClass}`}>
+            <div className={`flex p-2 gap-2 flex-wrap rounded-lg ${alertDivClass}`}>
                 {mtlList}
             </div>
         </div>
