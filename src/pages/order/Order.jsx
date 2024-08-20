@@ -20,7 +20,7 @@ function ButtonToCart({isDialogOpen}) {
     const amount = useSelector(getAmount)
 
     function handleClick() {
-        navigate('/cart', { replace: true })
+        navigate('/:merchant/cart', { replace: true })
     }
 
     if (amount > 0 && !isDialogOpen) {

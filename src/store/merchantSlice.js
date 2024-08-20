@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { apiMerchantInfo } from '../api'
+import { gql } from '@apollo/client'
+import client from '../apolloClient'
+
 
 
 export const merchantSlice = createSlice({
@@ -8,18 +10,18 @@ export const merchantSlice = createSlice({
         merchantInfo: undefined,
     },
     reducers: {
-        
+
     },
     extraReducers: (builder) => {
         builder
             .addCase(getMerchantInfo.fulfilled, (state, action) => {
                 state.merchantInfo = action.payload,
-                state.status = 'success'
+                    state.status = 'success'
             })
-            .addCase(getMerchantInfo.pending,state =>{
+            .addCase(getMerchantInfo.pending, state => {
                 state.status = 'loading'
             })
-            .addCase(getMerchantInfo.rejected,state =>{
+            .addCase(getMerchantInfo.rejected, state => {
                 state.status = 'failed'
             })
     }
@@ -30,12 +32,25 @@ export const getMerchantInfo = createAsyncThunk(
     'merchant/getMerchantInfo',
     async (arg, thunkAPI) => {
         const state = thunkAPI.getState()
-        if(state.merchant.merchantInfo === undefined){
+        if (state.merchant.merchantInfo === undefined) {
             console.log(state.merchant.merchantInfo);
+            const GET_MERCHANT_INFO = gql`
+                query Merchant($name: String!) {
+                    merchant(name: $name) {
+                        address
+                        id
+                        name
+                        displayName
+                    }
+                }
+            `
+            const { loading, error, data } = await client.query({
+                query: GET_MERCHANT_INFO,
+                variables: { name: arg }
+            })
             
-            const response = await apiMerchantInfo();
-            return response.data;
-        }else{
+            return data.merchant;
+        } else {
             return state.merchant.merchantInfo
         }
     }

@@ -28,7 +28,7 @@ export default function Cart() {
     }, [cart])
 
     const handleClick = () => {
-        navigate('/order', { replace: true })
+        navigate('/:merchant/order', { replace: true })
     }
 
     return (
@@ -53,7 +53,7 @@ function ButtonToCheck() {
     console.log(totalPrice);
     const navagate = useNavigate();
     const handleClick = () => {
-        navagate('/check', { replace: true })
+        navagate('/:merchant/check', { replace: true })
     }
     return (
         <div className='  fixed bottom-0 z-30 left-0 w-full p-4'>

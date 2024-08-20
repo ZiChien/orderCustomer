@@ -31,7 +31,7 @@ export default function Check() {
     }, [])
     return (
         <>
-            <Navbar title={'確認訂單'} merchantName={merchantInfo?.name} icon={<FontAwesomeIcon icon={faArrowLeft} size='lg' />} handleClick={() => navigate('/cart', { replace: true })} />
+            <Navbar title={'確認訂單'} merchantName={merchantInfo?.name} icon={<FontAwesomeIcon icon={faArrowLeft} size='lg' />} handleClick={() => navigate('/:merchant/cart', { replace: true })} />
             <div className='px-4 py-4 flex flex-col gap-6 pb-[112px]'>
                 <div className=''>
                     <h5 className=" text-base font-semibold my-2">取餐資訊</h5>
@@ -59,7 +59,7 @@ function ButtonToPlaceOrder() {
     const remark = useSelector(state => state.order.remark)
     const amount = useSelector(getAmount)
     const taketime = combineDateTime(useSelector(state => state.order.pickUpDate), useSelector(state => state.order.pickUpTime))
-    const navagate = useNavigate();
+    const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(true)
     useEffect(() => {
         setTimeout(() => {
@@ -93,11 +93,15 @@ function ButtonToPlaceOrder() {
             total: totalPrice,
             userId: "",
         }
+        if(content.length === 0) return
+        if (customer.name === '' || customer.name === undefined) return
+        if (taketime === '') return
         console.log(order);
         try {
             const res = await apiPostOrder({ order: order })
             persistor.purge()
-            navagate('/confirm', { replace: true })
+            navigate(':/merchant/confirm', { replace: true })
+
         } catch (error) {
             console.log(error);
         }
