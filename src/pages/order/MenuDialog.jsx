@@ -14,10 +14,9 @@ MenuDialog.propTypes = {
         itemprice: PropTypes.number,
         iteminfo: PropTypes.string
     }).isRequired,
-    mtl: PropTypes.any,
     handleClose: PropTypes.func.isRequired
 };
-function MenuDialog({ item, mtl, handleClose }) {
+function MenuDialog({ item, handleClose }) {
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -31,19 +30,18 @@ function MenuDialog({ item, mtl, handleClose }) {
             window.removeEventListener('click', handleClick)
         }
     }, [])
-    const itemInfo = `$${item.itemprice} ${item.iteminfo}`
+    const itemInfo = `$${item.price} ${item.productDescription}`
 
-    const SELECT_COUNT = 3;
-    const [userSelectedMtl, setUserSelectedMtl] = useState(new Array(SELECT_COUNT).fill(null))
+    const [userAttributes, setUserAttributes] = useState(item.attributes.map(() => null))
     const [isAlert, setIsAlert] = useState([false, false, false])
-    const handleSelectMtl = (index, item) => {
-        const newUserSelectedMtl = userSelectedMtl.map((mtl, i) => {
+    const handleSelectOption = (index, item) => {
+        const newUserSelectedMtl = userAttributes.map((attributes, i) => {
             if (i === index) {
                 return item
             }
-            return mtl
+            return attributes
         })
-        setUserSelectedMtl(newUserSelectedMtl)
+        setUserAttributes(newUserSelectedMtl)
     }
 
     const SelectMtlRefs = useRef(null)
@@ -55,7 +53,8 @@ function MenuDialog({ item, mtl, handleClose }) {
         return SelectMtlRefs.current;
     }
 
-    const SelectMtlList = userSelectedMtl.map((item, i) => {
+    const SelectMtlList = item.attributes.map((item, i) => {
+
         return (
             <div key={i} ref={(node) => {
                 const map = getMap();
@@ -65,15 +64,15 @@ function MenuDialog({ item, mtl, handleClose }) {
                     map.delete(i);
                 }
             }}>
-                <SelectMtl index={i} mtl={mtl} handleSelectMtl={handleSelectMtl} userSelectedMtl={userSelectedMtl} isAlert={isAlert[i]} />
+                <SelectMtl index={i} attributes={item} handleSelectOption={handleSelectOption} userSelectedAttributes={userAttributes} isAlert={isAlert[i]} />
             </div>
         )
     })
-    function checkUserSelctMtl() {
-        const newIsAlert = new Array(SELECT_COUNT).fill(false)
-        for (let index = 0; index < SELECT_COUNT; index++) {
-            if (userSelectedMtl[index] === null) {
-                setIsAlert(newIsAlert.map((item, i) => {
+    function checkUserAttributes() {
+        const isAlertList = userAttributes.map(() => false)
+        for (let index = 0; index < userAttributes.length; index++) {
+            if (userAttributes[index] === null) {
+                setIsAlert(isAlertList.map((item, i) => {
                     if (i === index) {
                         return true
                     }
@@ -90,9 +89,9 @@ function MenuDialog({ item, mtl, handleClose }) {
         const node = map.get(index);
         node.scrollIntoView({ behavior: "smooth", block: "center" });
     }
-    
 
-    
+
+
     //
     const [amount, setAmount] = useState(1)
     const handleClickPlus = () => {
@@ -108,12 +107,12 @@ function MenuDialog({ item, mtl, handleClose }) {
 
     //  Add to cart
     const handleClickAddToCart = () => {
-        if (!checkUserSelctMtl()) return
+        if (!checkUserAttributes()) return
         const newItem = {
             id: new Date().getTime(),
             item,
             amount,
-            mtl: userSelectedMtl,
+            mtl: userAttributes,
         }
         dispatch(addItem(newItem))
         handleClose()
@@ -128,7 +127,7 @@ function MenuDialog({ item, mtl, handleClose }) {
                     <img src={img1} alt="" className="h-full w-full object-cover rounded-lg" />
                 </div>
                 <div className="px-2 py-4">
-                    <h4 className=" font-medium my-1">{item.itemname}</h4>
+                    <h4 className=" font-medium my-1">{item.productDisplayName}</h4>
                     <p className="text-sm font-medium">{itemInfo}</p>
                     <div className="py-4 divide-y-2">
                         {SelectMtlList}

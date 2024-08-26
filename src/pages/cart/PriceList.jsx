@@ -15,7 +15,7 @@ function PriceList() {
         return {
             id: 'subTotal',
             name: '小計',
-            price: cart.length ? cart.reduce((acc, item) => acc + item.item.itemprice * item.amount, 0) : undefined
+            price: cart.length ? cart.reduce((acc, item) => acc + item.item.price * item.amount, 0) : undefined
         }
     }
     function getServiceCharge() {

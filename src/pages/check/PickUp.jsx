@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 import { getMerchantInfo } from "../../store/merchantSlice";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLocationDot } from '@fortawesome/free-solid-svg-icons'
@@ -11,10 +12,11 @@ dayjs.extend(isToday);
 
 
 export default function Pickup() {
+    const { merchant } = useParams()
     const dispatch = useDispatch();
     const merchantInfo = useSelector(state => state.merchant.merchantInfo)
     useEffect(() => {
-        dispatch(getMerchantInfo())
+        dispatch(getMerchantInfo(merchant))
     }, [])
     const pickUpDate = useSelector(state => state.order.pickUpDate);
     const day = dayjs(pickUpDate)

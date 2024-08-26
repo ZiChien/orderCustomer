@@ -33,7 +33,6 @@ export const getMerchantInfo = createAsyncThunk(
     async (arg, thunkAPI) => {
         const state = thunkAPI.getState()
         if (state.merchant.merchantInfo === undefined) {
-            console.log(state.merchant.merchantInfo);
             const GET_MERCHANT_INFO = gql`
                 query Merchant($name: String!) {
                     merchant(name: $name) {
@@ -48,8 +47,10 @@ export const getMerchantInfo = createAsyncThunk(
                 query: GET_MERCHANT_INFO,
                 variables: { name: arg }
             })
-            
-            return data.merchant;
+            if (!error && data) {
+                return data.merchant;
+            }else return thunkAPI.rejectWithValue(error)
+
         } else {
             return state.merchant.merchantInfo
         }

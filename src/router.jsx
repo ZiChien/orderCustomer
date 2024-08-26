@@ -20,7 +20,10 @@ import Confirm from './pages/confirm/Confirm.jsx';
 //     }
 // ]);
 const router = createBrowserRouter(createRoutesFromElements(
-    <Route path="/:merchant" element={<App />}>
+    <Route path="/:merchant"
+        element={<App />}
+        errorElement = {<div>404找不到店家</div>}
+    >
         <Route path="order" element={<Order />} />
         <Route path="cart" element={<Cart />} />
         <Route path="check" element={<Check />} />
