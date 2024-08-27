@@ -42,7 +42,7 @@ export default function Pickup() {
                     <TimeSelect />
                 </div>
                 {
-                    !day.isToday() &&
+                    !day.isToday() && pickUpDate &&
                     <div className="my-2">
                         <span className="mt-10 px-3 py-1 text-xs bg-button-check text-white rounded-xl font-semibold">
                             此為預約訂單

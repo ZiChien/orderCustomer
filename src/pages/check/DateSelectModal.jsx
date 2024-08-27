@@ -1,4 +1,3 @@
-import clsx from "clsx";
 import dayjs from "dayjs";
 import isToday from "dayjs/plugin/isToday";
 dayjs.extend(isToday);
@@ -6,28 +5,17 @@ dayjs.extend(isToday);
 import { useDispatch } from "react-redux";
 import { setPickUpDate } from "../../store/orderSlice";
 
-export default function DateSelectModal({ date, maxDayIndex, setIsShowDateSelect }) {
-    const maxDayMap = new Map([
-        [0, 1],
-        [1, 7],
-        [2, 30]
-    ])
-    const dateFilter = date.slice(0, maxDayMap.get(maxDayIndex))
-
+export default function DateSelectModal({ availableDate, setIsShowDateSelect }) {
     const dispatch = useDispatch();
-    const handleStorePickUpDate = (item) => {
-        if(!item.enable) return
-        dispatch(setPickUpDate(item.date))
+    const handleStorePickUpDate = (date) => {
+        dispatch(setPickUpDate(date))
         setIsShowDateSelect(false)
     }
-    const dateList = dateFilter.map((item) => {
-        const day = dayjs(item.date)
-
-        const text = `${day.isToday() ? '(今天)' : ''} ${day.format('MM/DD')} ${item.enable ? '' : '店休'}`
+    const dateList = availableDate.map((item) => {
+        const day = dayjs(item)
+        const text = `${day.isToday() ? '(今天)' : ''} ${day.format('MM/DD')}`
         return (
-            <div key={item.date} onClick={()=>handleStorePickUpDate(item)} className={clsx('flex justify-start px-4 py-3', {
-                ' text-black/40 bg-light-bg-seconds': !item.enable,
-            })}>
+            <div key={item} onClick={() => handleStorePickUpDate(item)} className='flex justify-start px-4 py-3'>
                 <span className="text-sm font-semibold">{text}</span>
             </div>
         )

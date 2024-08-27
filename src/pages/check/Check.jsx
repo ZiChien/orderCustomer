@@ -12,10 +12,8 @@ import OrderList from './OrderList.jsx'
 import clsx from 'clsx'
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-import { apiPostOrder } from '../../api.js'
 import dayjs from "dayjs";
 import { getAmount } from '../../store/cartSlice.js'
-import { persistor } from '../../store.js'
 
 export default function Check() {
     const { merchant } = useParams()
@@ -68,6 +66,7 @@ function ButtonToPlaceOrder() {
     }, [])
 
     function combineDateTime(pickDate, pickTime) {
+        if (pickDate === '' || pickTime === '') return ''
         const time = dayjs(pickTime)
         return dayjs(pickDate).set('hour', time.hour()).set('minute', time.minute()).format()
     }
@@ -97,9 +96,9 @@ function ButtonToPlaceOrder() {
         if (customer.name === '' || customer.name === undefined) return
         if (taketime === '') return
         try {
-            const res = await apiPostOrder({ order: order })
-            persistor.purge()
-            navigate('../confirm', { replace: true })
+            // const res = await apiPostOrder({ order: order })
+            // persistor.purge()
+            // navigate('../confirm', { replace: true })
 
         } catch (error) {
             console.log(error);
@@ -116,8 +115,8 @@ function ButtonToPlaceOrder() {
                         {totalPrice}
                     </span>
                 </div>
-                <button onClick={handleSubmit} disabled={isLoading} className={clsx('w-full flex justify-center font-semibold bg-button-check rounded-lg p-2 text-white', {
-                    ' bg-gray-500 opacity-30': customer.name === '' || isLoading,
+                <button onClick={handleSubmit} disabled={customer.name === '' || taketime === '' || isLoading} className={clsx('w-full flex justify-center font-semibold bg-button-check rounded-lg p-2 text-white', {
+                    ' bg-gray-500 opacity-30': customer.name === '' || taketime === '' || isLoading,
                 })}>
                     <div className='relative'>
                         {
