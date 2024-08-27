@@ -16,7 +16,7 @@ dayjs.extend(isToday);
 export default function DateSelect() {
     const dispatch = useDispatch();
     const pickUpDate = useSelector(state => state.order.pickUpDate);
-    
+
     const pickUpDate_Format = pickUpDate ? `${dayjs(pickUpDate).isToday() ? '(今天)' : ''} ${dayjs(pickUpDate).format('MM/DD')}` : '商家已關閉'
     const [isShowDateSelect, setIsShowDateSelect] = useState(false)
     const dateRef = useRef(null)
@@ -35,10 +35,10 @@ export default function DateSelect() {
     const availableDate = data?.getAvailableDate
     useEffect(() => {
         if (error) throw new Response(error, { status: 404 });
-        if (data && availableDate.length) {
+        if (data && !availableDate.length) dispatch(setPickUpDate(''))
+        if (data && availableDate.length && pickUpDate === '') {
             dispatch(setPickUpDate(availableDate[0]))
-        }else{
-            dispatch(setPickUpDate(''))
+            console.log(availableDate[0]);
         }
     }, [data, error, availableDate, dispatch])
     useEffect(() => {

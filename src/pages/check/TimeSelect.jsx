@@ -31,11 +31,11 @@ export default function TimeSelect() {
     const availableTime = data?.getAvailableTime
     useEffect(() => {
         if (error) throw new Response(error, { status: 404 });
-        if (data && availableTime.length) {
+        if(data && !availableTime.length) dispatch(setPickUpTime(''))
+        if (data && availableTime.length && pickUpTime === '') {
             dispatch(setPickUpTime(availableTime[0]))
-        } else {
-            dispatch(setPickUpTime(''))
         }
+        
 
     }, [data, availableTime, dispatch, error])
 
