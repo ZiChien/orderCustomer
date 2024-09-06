@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom'
 export default function Order() {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
     return (
-        <div className='p-6 w-full'>
+        <div className='p-6 pb-10 w-full'>
             <MerchantInfo />
             <Menu isDialogOpen={isDialogOpen} setIsDialogOpen={setIsDialogOpen} />
             <ButtonToCart isDialogOpen={isDialogOpen} />
@@ -18,9 +18,10 @@ export default function Order() {
 function ButtonToCart({isDialogOpen}) {
     const navigate = useNavigate();
     const amount = useSelector(getAmount)
-
+    
+    
     function handleClick() {
-        navigate('/cart', { replace: true })
+        navigate('../cart')
     }
 
     if (amount > 0 && !isDialogOpen) {

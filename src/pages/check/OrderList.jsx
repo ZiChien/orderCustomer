@@ -4,20 +4,18 @@ import { useState } from "react";
 
 export default function OrderList() {
     const cart = useSelector(state => state.cart.value);
-    console.log(cart);
-
     const cartList = cart.map((item, index) => {
-        const mtls = item.mtl.map((mtl) => mtl.name).join(', ')
+        const attributes = item.product.attributes.map((attribute) => attribute.option.optionDisplayName).join(', ')
 
         return (
             <div key={item.id} className="flex justify-between items-center">
                 <div className='flex flex-col'>
-                    <span className='text-xs font-medium'>{item.amount}x {item.item.itemname}</span>
+                    <span className='text-xs font-medium'>{item.amount}x {item.product.productDisplayName}</span>
                     <span className='text-xs text-black/80'>
-                        {mtls}
+                        {attributes}
                     </span>
                 </div>
-                <span className="text-xs">${item.item.itemprice}</span>
+                <span className="text-xs">${item.product.price}</span>
             </div>
         )
     });

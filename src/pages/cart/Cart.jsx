@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { getMerchantInfo } from '../../store/merchantSlice'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 import Navbar from '../../components/Navbar.jsx'
 import CartContent from './CartContent.jsx'
@@ -14,21 +14,22 @@ import { faDollarSign, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 
 export default function Cart() {
+    const { merchant } = useParams()
     const dispatch = useDispatch()
     const navigate = useNavigate();
     const cart = useSelector(state => state.cart.value)
     const merchantInfo = useSelector(state => state.merchant.merchantInfo)
     useEffect(() => {
-        dispatch(getMerchantInfo())
+        dispatch(getMerchantInfo(merchant))
     }, [])
     useEffect(() => {
         if (cart.length === 0) {
-            navigate('/order', { replace: true })
+            navigate('../order', { replace: true })
         }
     }, [cart])
 
     const handleClick = () => {
-        navigate('/order', { replace: true })
+        navigate('../order', { replace: true })
     }
 
     return (
@@ -50,10 +51,9 @@ export default function Cart() {
 function ButtonToCheck() {
     const priceList = useSelector(state => state.cart.priceList)
     const totalPrice = priceList.reduce((acc, item) => acc + item.price, 0)
-    console.log(totalPrice);
     const navagate = useNavigate();
     const handleClick = () => {
-        navagate('/check', { replace: true })
+        navagate('../check', { replace: true })
     }
     return (
         <div className='  fixed bottom-0 z-30 left-0 w-full p-4'>

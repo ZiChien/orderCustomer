@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setPickUpDate } from "../../store/orderSlice";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
-import { apiGetDate } from "../../api";
+import { useQuery, gql } from "@apollo/client";
 import DateSelectModal from "./DateSelectModal";
 import { useTransition, animated } from '@react-spring/web';
 import dayjs from "dayjs";
@@ -16,22 +16,35 @@ dayjs.extend(isToday);
 export default function DateSelect() {
     const dispatch = useDispatch();
     const pickUpDate = useSelector(state => state.order.pickUpDate);
-    const day = dayjs(pickUpDate)
-    const pickUpDate_Format = `${day.isToday() ? '(今天)' : ''} ${day.format('MM/DD')}`
 
-    const [date, setDate] = useState('')
-    const [maxDayIndex, setMaxDayIndex] = useState(0)
+    const pickUpDate_Format = pickUpDate ? `${dayjs(pickUpDate).isToday() ? '(今天)' : ''} ${dayjs(pickUpDate).format('MM/DD')}` : '商家已關閉'
     const [isShowDateSelect, setIsShowDateSelect] = useState(false)
     const dateRef = useRef(null)
     const dateBtnRef = useRef(null)
-    useEffect(() => {
-        getDate()
-        async function getDate() {
-            const res = await apiGetDate()
-            setDate(res.data.date);
-            setMaxDayIndex(res.data.maxdayindex);
-        }
 
+    const merchantId = useSelector(state => state.merchant.merchantInfo?.id)
+    const GET_AVAILABLE_DATE = gql`
+        query getAvailableDate($merchantId: ID!) {
+            getAvailableDate(merchantId: $merchantId)
+        }
+    `
+    const { data, error } = useQuery(GET_AVAILABLE_DATE, {
+        variables: { merchantId },
+        skip: !merchantId
+    })
+    const availableDate = data?.getAvailableDate
+    useEffect(() => {
+        if (error) throw new Response(error, { status: 404 });
+        if (data) {
+            if (!availableDate.length) dispatch(setPickUpDate(''))
+                
+            else if (pickUpDate === '' || availableDate.find((date) => date === pickUpDate) === undefined) {
+                dispatch(setPickUpDate(availableDate[0]))
+            }
+
+        }
+    }, [data, error, availableDate, dispatch])
+    useEffect(() => {
         const handleCloseDateSelect = (e) => {
             if (dateRef.current && !dateRef.current.contains(e.target) && !dateBtnRef.current.contains(e.target)) {
                 setIsShowDateSelect(false);
@@ -42,11 +55,6 @@ export default function DateSelect() {
             document.removeEventListener('click', handleCloseDateSelect)
         }
     }, [])
-    useEffect(() => {
-        if (pickUpDate === '' && date) {
-            dispatch(setPickUpDate(date.find(item => item.enable).date))
-        }
-    }, [date])
     const dateTransition = useTransition(isShowDateSelect, {
         from: { opacity: 0 },
         enter: { opacity: 1 },
@@ -72,7 +80,7 @@ export default function DateSelect() {
                     return (
                         isShowDateSelect &&
                         <animated.div ref={dateRef} style={style} className='absolute top-12 left-0 w-full'>
-                            <DateSelectModal date={date} maxDayIndex={maxDayIndex} setIsShowDateSelect={setIsShowDateSelect} />
+                            <DateSelectModal availableDate={availableDate} setIsShowDateSelect={setIsShowDateSelect} />
                         </animated.div>
                     )
                 })

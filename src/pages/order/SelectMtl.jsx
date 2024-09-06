@@ -1,19 +1,19 @@
 import clsx from 'clsx';
 import { useState } from 'react';
-function SelectMtl({ index, mtl, handleSelectMtl, userSelectedMtl, isAlert }) {
-    const filterOnSupply = mtl.filter((item) => item.onsupply === true)
-    const mtlList = filterOnSupply.map((item) => {
+function SelectMtl({ index, attributes, handleSelectOption, userSelectedAttributes, isAlert }) {
+    const filterOnSupply = attributes.options.filter((item) => item.status === true)
+    const optionList = filterOnSupply.map((item) => {
         const selectClass = clsx({
-            ' bg-button-check border-button-check-border text-white': userSelectedMtl[index] !== null ? userSelectedMtl[index].id === item.id : false,
+            ' bg-button-check border-button-check-border text-white': userSelectedAttributes[index] !== null ? userSelectedAttributes[index].optionId === item.optionId : false,
         })
         return (
-            <button onClick={() => handleClick(item)} key={item.id} className={'p-2 px-4 text-sm border-2 rounded-lg border-button-border' + selectClass}>
-                <span className=" font-medium">{item.name}</span>
+            <button onClick={() => handleClick(item)} key={item.optionId} className={'p-2 px-4 text-sm border-2 rounded-lg border-button-border' + selectClass}>
+                <span className=" font-medium">{item.optionDisplayName}</span>
             </button>
         )
     })
     const handleClick = (item) => {
-        handleSelectMtl(index, item)
+        handleSelectOption(index, item)
     }
 
     const alertDivClass = clsx({
@@ -21,9 +21,9 @@ function SelectMtl({ index, mtl, handleSelectMtl, userSelectedMtl, isAlert }) {
     })
     return (
         <div className="py-4 flex flex-col gap-3">
-            <span className={clsx('font-medium text-sm ', { 'text-red-700': isAlert })}>(配料{index + 1})*請至少選擇一種</span>
+            <span className={clsx('font-medium text-sm ', { 'text-red-700': isAlert })}>{attributes.attributeDisplayName} {attributes.attributeDescription}</span>
             <div className={`flex p-2 gap-2 flex-wrap rounded-lg ${alertDivClass}`}>
-                {mtlList}
+                {optionList}
             </div>
         </div>
     )
