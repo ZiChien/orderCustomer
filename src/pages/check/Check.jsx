@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { getMerchantInfo } from '../../store/merchantSlice'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faDollarSign } from '@fortawesome/free-solid-svg-icons'
-import { useNavigate,useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Method from './Method.jsx'
 import CustomerInfo from './CustomerInfo.jsx'
 import PickUp from './PickUp.jsx'
@@ -14,6 +14,8 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import dayjs from "dayjs";
 import { getAmount } from '../../store/cartSlice.js'
+import { useMutation, gql } from '@apollo/client'
+import { persistor } from '../../store' // 添加这行
 
 export default function Check() {
     const { merchant } = useParams()
@@ -50,13 +52,14 @@ export default function Check() {
     )
 }
 function ButtonToPlaceOrder() {
+    const merchantInfo = useSelector(state => state.merchant.merchantInfo)
     const cart = useSelector(state => state.cart.value)
     const priceList = useSelector(state => state.cart.priceList)
     const totalPrice = priceList.reduce((acc, item) => acc + item.price, 0)
     const customer = useSelector(state => state.order.customer)
     const remark = useSelector(state => state.order.remark)
     const amount = useSelector(getAmount)
-    const taketime = combineDateTime(useSelector(state => state.order.pickUpDate), useSelector(state => state.order.pickUpTime))
+    const pickUpDateTime = combineDateTime(useSelector(state => state.order.pickUpDate), useSelector(state => state.order.pickUpTime))
     const navigate = useNavigate()
     const [isLoading, setIsLoading] = useState(true)
     useEffect(() => {
@@ -70,35 +73,34 @@ function ButtonToPlaceOrder() {
         const time = dayjs(pickTime)
         return dayjs(pickDate).set('hour', time.hour()).set('minute', time.minute()).format()
     }
-    const handleSubmit = async () => {
-        const content = cart.map(item => {
-            return {
-                bonusmtls: [],
-                cartid: item.id,
-                mtls: item.mtl,
-                number: item.amount,
-                price: item.item.itemprice * item.amount,
-            }
-        })
-        const order = {
-            content: content,
-            isLine: false,
-            name: customer.name,
-            phone: customer.phone,
-            note: remark,
-            number: amount,
-            orderID: new Date().getTime(),
-            taketime: taketime,
-            total: totalPrice,
-            userId: "",
+    const [createOrder, { loading, error }] = useMutation(gql`
+        mutation CreateOrder($input: OrderInput!) {
+            createOrder(input: $input)
         }
-        if(content.length === 0) return
+    `);
+    const handleSubmit = async () => {
+        const order = {
+            orderID: new Date().getTime(),
+            content: cart,
+            note: remark,
+            customer: {
+                name: customer.name,
+                phone: customer.phone,
+                userId: "",
+            },
+            priceList: priceList,
+            amount,
+            isLine: false,
+            pickUpDateTime,
+            merchantId: merchantInfo.id,
+        }
+        if (cart.length === 0) return
         if (customer.name === '' || customer.name === undefined) return
-        if (taketime === '') return
+        if (pickUpDateTime === '') return
         try {
-            // const res = await apiPostOrder({ order: order })
-            // persistor.purge()
-            // navigate('../confirm', { replace: true })
+            await createOrder({ variables: { input: order } })
+            persistor.purge()
+            navigate('../confirm', { replace: true })
 
         } catch (error) {
             console.log(error);
@@ -115,8 +117,8 @@ function ButtonToPlaceOrder() {
                         {totalPrice}
                     </span>
                 </div>
-                <button onClick={handleSubmit} disabled={customer.name === '' || taketime === '' || isLoading} className={clsx('w-full flex justify-center font-semibold bg-button-check rounded-lg p-2 text-white', {
-                    ' bg-gray-500 opacity-30': customer.name === '' || taketime === '' || isLoading,
+                <button onClick={handleSubmit} disabled={customer.name === '' || pickUpDateTime === '' || isLoading} className={clsx('w-full flex justify-center font-semibold bg-button-check rounded-lg p-2 text-white', {
+                    ' bg-gray-500 opacity-30': customer.name === '' || pickUpDateTime === '' || isLoading,
                 })}>
                     <div className='relative'>
                         {

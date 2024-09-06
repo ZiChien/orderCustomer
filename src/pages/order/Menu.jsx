@@ -223,10 +223,10 @@ function Menu({ isDialogOpen, setIsDialogOpen }) {
     });
   });
 
-  const [dialogItem, setDialogItem] = useState({});
-  const handleClick = (item) => {
+  const [dialogProduct, setDialogProduct] = useState({});
+  const handleClick = (product) => {
     setIsDialogOpen(true);
-    setDialogItem(item);
+    setDialogProduct(product);
     document.body.style.overflow = "hidden";
   };
   const handleClose = () => {
@@ -253,7 +253,7 @@ function Menu({ isDialogOpen, setIsDialogOpen }) {
           isDialogOpen && (
             <animated.div style={style}>
               <MenuDialog
-                item={dialogItem}
+                product={dialogProduct}
                 handleClose={handleClose}
               />
             </animated.div>

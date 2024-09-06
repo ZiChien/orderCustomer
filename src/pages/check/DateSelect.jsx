@@ -24,7 +24,7 @@ export default function DateSelect() {
 
     const merchantId = useSelector(state => state.merchant.merchantInfo?.id)
     const GET_AVAILABLE_DATE = gql`
-        query Query($merchantId: ID!) {
+        query getAvailableDate($merchantId: ID!) {
             getAvailableDate(merchantId: $merchantId)
         }
     `
@@ -35,10 +35,13 @@ export default function DateSelect() {
     const availableDate = data?.getAvailableDate
     useEffect(() => {
         if (error) throw new Response(error, { status: 404 });
-        if (data && !availableDate.length) dispatch(setPickUpDate(''))
-        if (data && availableDate.length && pickUpDate === '') {
-            dispatch(setPickUpDate(availableDate[0]))
-            console.log(availableDate[0]);
+        if (data) {
+            if (!availableDate.length) dispatch(setPickUpDate(''))
+                
+            else if (pickUpDate === '' || availableDate.find((date) => date === pickUpDate) === undefined) {
+                dispatch(setPickUpDate(availableDate[0]))
+            }
+
         }
     }, [data, error, availableDate, dispatch])
     useEffect(() => {

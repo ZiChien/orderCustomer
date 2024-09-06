@@ -8,15 +8,7 @@ import { addItem } from "../../store/cartSlice";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
-MenuDialog.propTypes = {
-    item: PropTypes.shape({
-        itemname: PropTypes.string,
-        itemprice: PropTypes.number,
-        iteminfo: PropTypes.string
-    }).isRequired,
-    handleClose: PropTypes.func.isRequired
-};
-function MenuDialog({ item, handleClose }) {
+function MenuDialog({ product, handleClose }) {
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -30,9 +22,9 @@ function MenuDialog({ item, handleClose }) {
             window.removeEventListener('click', handleClick)
         }
     }, [])
-    const itemInfo = `$${item.price} ${item.productDescription}`
+    const itemInfo = `$${product.price} ${product.productDescription}`
 
-    const [userAttributes, setUserAttributes] = useState(item.attributes.map(() => null))
+    const [userAttributes, setUserAttributes] = useState(product.attributes.map(() => null))
     const [isAlert, setIsAlert] = useState([false, false, false])
     const handleSelectOption = (index, item) => {
         const newUserSelectedMtl = userAttributes.map((attributes, i) => {
@@ -53,7 +45,7 @@ function MenuDialog({ item, handleClose }) {
         return SelectMtlRefs.current;
     }
 
-    const SelectMtlList = item.attributes.map((item, i) => {
+    const SelectMtlList = product.attributes.map((item, i) => {
 
         return (
             <div key={i} ref={(node) => {
@@ -108,11 +100,21 @@ function MenuDialog({ item, handleClose }) {
     //  Add to cart
     const handleClickAddToCart = () => {
         if (!checkUserAttributes()) return
+        const newAttributes = product.attributes.map((item, i) => {
+            const newAttribute = {
+                ...item,
+                option: userAttributes[i]
+            }
+            delete newAttribute.options
+            return newAttribute
+        })
         const newItem = {
             id: new Date().getTime(),
-            item,
+            product: {
+                ...product,
+                attributes: newAttributes
+            },
             amount,
-            mtl: userAttributes,
         }
         dispatch(addItem(newItem))
         handleClose()
@@ -127,7 +129,7 @@ function MenuDialog({ item, handleClose }) {
                     <img src={img1} alt="" className="h-full w-full object-cover rounded-lg" />
                 </div>
                 <div className="px-2 py-4">
-                    <h4 className=" font-medium my-1">{item.productDisplayName}</h4>
+                    <h4 className=" font-medium my-1">{product.productDisplayName}</h4>
                     <p className="text-sm font-medium">{itemInfo}</p>
                     <div className="py-4 divide-y-2">
                         {SelectMtlList}

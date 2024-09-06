@@ -6,36 +6,51 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronDown } from '@fortawesome/free-solid-svg-icons'
 import TimeSelectModal from "./TimeSelectModal";
 import { useTransition, animated } from '@react-spring/web';
-import dayjs from "dayjs";
 import { useQuery, gql } from "@apollo/client";
+import dayjs from "dayjs";
+import utc from 'dayjs/plugin/utc'
+import timezone from 'dayjs/plugin/timezone'
+import isToday from "dayjs/plugin/isToday";
 
+dayjs.extend(utc)
+dayjs.extend(timezone)
+dayjs.extend(isToday);
 
 
 export default function TimeSelect() {
     const dispatch = useDispatch();
     const pickUpTime = useSelector(state => state.order.pickUpTime);
+    const pickUpDate = useSelector(state => state.order.pickUpDate);
     const format = pickUpTime ? dayjs(pickUpTime).format('HH:mm') : '商家已關閉'
     const [isShowTimeSelect, setIsShowTimeSelect] = useState(false)
     const TimeRef = useRef(null)
     const TimeBtnRef = useRef(null)
     const merchantId = useSelector(state => state.merchant.merchantInfo?.id)
     const GET_AVAILABLE_TIME = gql`
-        query Query($merchantId: ID!) {
-            getAvailableTime(merchantId: $merchantId)
+        query getAvailableTime($merchantId: ID!, $pickUpDate: String!) {
+            getAvailableTime(merchantId: $merchantId, pickUpDate: $pickUpDate)
         }
     `
     const { data, error } = useQuery(GET_AVAILABLE_TIME, {
-        variables: { merchantId: merchantId },
-        skip: !merchantId
+        variables: {
+            merchantId: merchantId,
+            pickUpDate: pickUpDate,
+        },
+        skip: !merchantId || pickUpDate === ''
     })
-    const availableTime = data?.getAvailableTime
+    useEffect(() => {
+        if (pickUpDate === '') dispatch(setPickUpTime(''))
+    }, [pickUpDate])
+    const availableTime = data ? data.getAvailableTime : []
     useEffect(() => {
         if (error) throw new Response(error, { status: 404 });
-        if(data && !availableTime.length) dispatch(setPickUpTime(''))
-        if (data && availableTime.length && pickUpTime === '') {
-            dispatch(setPickUpTime(availableTime[0]))
+        if (data) {
+            if (!availableTime.length) dispatch(setPickUpTime(''))
+            else if (pickUpTime === '' || availableTime.find((time) => time === pickUpTime) === undefined) {
+                dispatch(setPickUpTime(availableTime[0]))
+            }
+
         }
-        
 
     }, [data, availableTime, dispatch, error])
 

@@ -96,7 +96,7 @@ function CartCard({ item }) {
         // config: { duration: 150 },
     })
 
-    const mtls = item.mtl.map((mtl) => mtl.optionDisplayName).join(', ')
+    const mtls = item.product.attributes.map((attribute) => attribute.option.optionDisplayName).join(', ')
     return (
         <div className='relative flex p-2 px-4 gap-4 items-center'>
             <div ref={counterControlRef}>
@@ -128,13 +128,13 @@ function CartCard({ item }) {
                     <img src={img1} alt="" className='h-full object-cover rounded-lg' />
                 </div>
                 <div className='flex flex-col'>
-                    <span className=' font-medium text-base'>{item.item.productDisplayName}</span>
+                    <span className=' font-medium text-base'>{item.product.productDisplayName}</span>
                     <span className=' font-medium text-xs'>
                         {mtls}
                     </span>
                 </div>
                 <div className='justify-items-end ml-auto'>
-                    <span className=' text-sm font-medium'>${item.item.price * item.amount}</span>
+                    <span className=' text-sm font-medium'>${item.product.price * item.amount}</span>
                 </div>
             </div>
 
