@@ -43,7 +43,7 @@ export const getMerchantInfo = createAsyncThunk(
                     }
                 }
             `
-            const { loading, error, data } = await client.query({
+            const { error, data } = await client.query({
                 query: GET_MERCHANT_INFO,
                 variables: { name: arg }
             })

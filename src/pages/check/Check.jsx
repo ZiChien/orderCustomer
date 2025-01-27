@@ -15,7 +15,7 @@ import Box from '@mui/material/Box';
 import dayjs from "dayjs";
 import { getAmount } from '../../store/cartSlice.js'
 import { useMutation, gql } from '@apollo/client'
-import { persistor } from '../../store' // 添加这行
+import { persistor } from '../../store'
 
 export default function Check() {
     const { merchant } = useParams()
@@ -58,6 +58,7 @@ function ButtonToPlaceOrder() {
     const totalPrice = priceList.reduce((acc, item) => acc + item.price, 0)
     const customer = useSelector(state => state.order.customer)
     const remark = useSelector(state => state.order.remark)
+    const tableware = useSelector(state => state.order.tableware)
     const amount = useSelector(getAmount)
     const pickUpDateTime = combineDateTime(useSelector(state => state.order.pickUpDate), useSelector(state => state.order.pickUpTime))
     const navigate = useNavigate()
@@ -82,7 +83,8 @@ function ButtonToPlaceOrder() {
         const order = {
             orderID: new Date().getTime(),
             content: cart,
-            note: remark,
+            remark,
+            tableware,
             customer: {
                 name: customer.name,
                 phone: customer.phone,
@@ -90,6 +92,7 @@ function ButtonToPlaceOrder() {
             },
             priceList: priceList,
             amount,
+            totalPrice,
             isLine: false,
             pickUpDateTime,
             merchantId: merchantInfo.id,
@@ -98,8 +101,12 @@ function ButtonToPlaceOrder() {
         if (customer.name === '' || customer.name === undefined) return
         if (pickUpDateTime === '') return
         try {
+            console.log(order);
+            
             await createOrder({ variables: { input: order } })
-            persistor.purge()
+            await persistor.purge()
+            console.log('purfgge');
+            
             navigate('../confirm', { replace: true })
 
         } catch (error) {

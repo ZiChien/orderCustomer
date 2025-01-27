@@ -14,7 +14,6 @@ Menu.propTypes = {
 };
 
 function Menu({ isDialogOpen, setIsDialogOpen }) {
-
   // Add PropTypes validation
   const [menu, setMenu] = useState([]);
   const category = menu.map((item) => {
@@ -73,32 +72,7 @@ function Menu({ isDialogOpen, setIsDialogOpen }) {
     if (data) {
       setMenu(data.getMenu[0].categories);
     }
-  }, [data])
-  //   const res = useEffect(() => {
-  //     async function fetchData() {
-  //       await apiGetmtl().then((res) => {
-  //         const newMenu = [
-  //           {
-  //             id: 1,
-  //             category: "summer",
-  //             categoryName: "夏天系列",
-  //             products: res.data.summer,
-  //           },
-  //           {
-  //             id: 2,
-  //             category: "winter",
-  //             categoryName: "冬天系列",
-  //             products: res.data.winter,
-  //           },
-  //         ];
-  //         setMenu(newMenu);
-  //         setMtl(res.data.mtl);
-  //       });
-  //     }
-  //     fetchData();
-  //   }, []);
-
-  /////////////////////////////
+  }, [data]);
 
   const productsList = (products) => {
     const filterOnSupply = products.filter((item) => item.status === true);
@@ -113,8 +87,12 @@ function Menu({ isDialogOpen, setIsDialogOpen }) {
           <div className="flex justify-between gap-2">
             <div className=" flex-grow">
               <div className="flex flex-col items-start">
-                <span className=" font-medium text-lg text-left">{item.productDisplayName}</span>
-                <span className=" font-normal text-sm text-left">{itemInfo}</span>
+                <span className=" font-medium text-lg text-left">
+                  {item.productDisplayName}
+                </span>
+                <span className=" font-normal text-sm text-left">
+                  {itemInfo}
+                </span>
               </div>
             </div>
             <div className="w-[120px] shrink-0">
@@ -143,16 +121,17 @@ function Menu({ isDialogOpen, setIsDialogOpen }) {
           const map = getMenuListMap();
           if (node) {
             map.set(item.categoryName, {
-              ...map.get(item.categoryName),
               node: node,
             });
           } else {
-            map.delete(item.id);
+            map.delete(item.categoryName);
           }
         }}
       >
         <div className="my-1 flex items-baseline gap-2 ">
-          <span className=" text-2xl font-medium">{item.categoryDisplayName}</span>
+          <span className=" text-2xl font-medium">
+            {item.categoryDisplayName}
+          </span>
           <div className=" grow bg-black h-[2px]"></div>
         </div>
         <div className="flex flex-col my-4 divide-y-[2px] divide-solid">
@@ -163,12 +142,12 @@ function Menu({ isDialogOpen, setIsDialogOpen }) {
   });
   const [currentCategory, setCurrentCategory] = useState();
   useEffect(() => {
-    const category = menu.map((item) => {
-      return {
-        category: item.category,
-        categoryName: item.categoryName,
-      };
-    });
+    // const category = menu.map((item) => {
+    //   return {
+    //     category: item.category,
+    //     categoryName: item.categoryName,
+    //   };
+    // });
     setCurrentCategory(category[0]);
 
     // hanndle observe category in vewport
@@ -188,14 +167,13 @@ function Menu({ isDialogOpen, setIsDialogOpen }) {
     const node = map.get(category.keyName).node;
     node.scrollIntoView({ behavior: "smooth" });
   };
-
+  const isInViewPortRef = useRef(new Map());
   const observer = new IntersectionObserver((entries) => {
-    const map = getMenuListMap();
     function handleCurrentCategory() {
       // find the last category in viewport and set it as current category
-      const newArray = Array.from(map);
+      const newArray = Array.from(isInViewPortRef.current);
       let newCategory = newArray.findLast(
-        (item) => item[1]?.isInViewport === true
+        (item) => item[1] === true
       )[0];
       const newCurrentCategory = category.find(
         (item) => item.keyName === newCategory
@@ -206,18 +184,12 @@ function Menu({ isDialogOpen, setIsDialogOpen }) {
       if (entry.isIntersecting) {
         // if the element is in viewport or entering the viewport
         const targetCategory = entry.target.attributes["data-category"].value;
-        map.set(targetCategory, {
-          ...map.get(targetCategory),
-          isInViewport: true,
-        });
+        isInViewPortRef.current.set(targetCategory, true);
         handleCurrentCategory();
       } else {
         // if the element is not in viewport or leaving the viewport
         const targetCategory = entry.target.attributes["data-category"].value;
-        map.set(targetCategory, {
-          ...map.get(targetCategory),
-          isInViewport: false,
-        });
+        isInViewPortRef.current.set(targetCategory, false);
         handleCurrentCategory();
       }
     });
@@ -252,10 +224,7 @@ function Menu({ isDialogOpen, setIsDialogOpen }) {
         return (
           isDialogOpen && (
             <animated.div style={style}>
-              <MenuDialog
-                product={dialogProduct}
-                handleClose={handleClose}
-              />
+              <MenuDialog product={dialogProduct} handleClose={handleClose} />
             </animated.div>
           )
         );

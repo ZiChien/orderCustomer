@@ -1,11 +1,13 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { PURGE } from 'redux-persist'
 
+const initialState = {
+    value: [],
+    priceList: [],
+}
 export const cartSlice = createSlice({
     name: 'cart',
-    initialState: {
-        value: [],
-        priceList: [],
-    },
+    initialState,
     reducers: {
         addItem: (state, action) => {
             state.value.push(action.payload)
@@ -16,6 +18,9 @@ export const cartSlice = createSlice({
         setPriceList: (state, action) => {
             state.priceList = action.payload
         }
+    },
+    extraReducers: (builder) => {
+        builder.addCase(PURGE, () => initialState);
     },
 })
 export const { addItem, setItem, setPriceList } = cartSlice.actions
