@@ -25,7 +25,7 @@ function App() {
       if (merchants.find((item) => item.name === merchant) === undefined) {
         throw new Response("Merchant not Found", { status: 404 });
       }
-    } 
+    }
     // else {
     //   console.log(error);
     //   throw new Response("Merchant not Found", { status: 404 });
