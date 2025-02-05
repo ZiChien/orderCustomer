@@ -36,16 +36,20 @@ export default function TimeSelect() {
             merchantId: merchantId,
             pickUpDate: pickUpDate,
         },
-        skip: !merchantId || pickUpDate === ''
+        skip: !merchantId || pickUpDate === '',
+        fetchPolicy: 'cache-and-network'
     })
     useEffect(() => {
         if (pickUpDate === '') dispatch(setPickUpTime(''))
-    }, [pickUpDate])
+    }, [pickUpDate, dispatch])
     const availableTime = data ? data.getAvailableTime : []
+
     useEffect(() => {
         if (error) throw new Response(error, { status: 404 });
         if (data) {
             if (!availableTime.length) dispatch(setPickUpTime(''))
+
+            //如果使用者選還未選擇時間，或是可選的時間中沒有當前使用者所選的時間，把使用者所選時間設為第一個可選的時間
             else if (pickUpTime === '' || availableTime.find((time) => time === pickUpTime) === undefined) {
                 dispatch(setPickUpTime(availableTime[0]))
             }

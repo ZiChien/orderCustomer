@@ -1,12 +1,12 @@
-import { useEffect } from 'react';
-import './App.css'
-import { Outlet, useLocation, useParams } from 'react-router-dom'
-import { useTransition, animated } from '@react-spring/web';
-import { useQuery, gql } from '@apollo/client';
+import { useEffect } from "react";
+import "./App.css";
+import { Outlet, useLocation, useParams } from "react-router-dom";
+import { useTransition, animated } from "@react-spring/web";
+import { useQuery, gql } from "@apollo/client";
 
 function App() {
-  const location = useLocation()
-  const { merchant } = useParams()
+  const location = useLocation();
+  const { merchant } = useParams();
   const GET_ALL_MERCHANTS = gql`
     query GetAllMerchants {
       getAllMerchants {
@@ -17,22 +17,24 @@ function App() {
         phone
       }
     }
-  `
-  const { data, loading, error } = useQuery(GET_ALL_MERCHANTS)
+  `;
+  const { data, loading, error } = useQuery(GET_ALL_MERCHANTS);
   useEffect(() => {
     if (!error && data) {
-      const merchants = data.getAllMerchants
+      const merchants = data.getAllMerchants;
       if (merchants.find((item) => item.name === merchant) === undefined) {
         throw new Response("Merchant not Found", { status: 404 });
       }
     }
-
-
-  }, [data, error])
+    // else {
+    //   console.log(error);
+    //   throw new Response("Merchant not Found", { status: 404 });
+    // }
+  }, [data, error, merchant]);
 
   const transitions = useTransition(location.pathname, {
-    from: { opacity: 0, },
-    enter: { opacity: 1, },
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
     // leave: { opacity: 0, },
     // exitBeforeEnter: true,
     config: { duration: 300 },
@@ -43,16 +45,14 @@ function App() {
     //     ctrl.start({ opacity: 1, transform: 'translateY(0px)' });
     //   }
     // }
-  })
-  return (
-    transitions((style, location) => {
-      return (
-        <animated.div style={{ ...style, position: 'absolute', width: '100vw' }}>
-          <Outlet />
-        </animated.div>
-      )
-    })
-  )
+  });
+  return transitions((style, location) => {
+    return (
+      <animated.div style={{ ...style, position: "absolute", width: "100vw" }}>
+        <Outlet />
+      </animated.div>
+    );
+  });
 }
 
-export default App
+export default App;

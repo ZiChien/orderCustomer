@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import cartReducer from './store/cartSlice'
 import merchantReducer from './store/merchantSlice'
 import orderSlice from './store/orderSlice'
+import userSlice from './store/userSlice'
 import storage from 'redux-persist/lib/storage'; // 默認使用 LocalStorage
 import { combineReducers } from 'redux';
 import {
@@ -18,13 +19,14 @@ import {
 const rootReducer = combineReducers({
   cart: cartReducer,
   merchant: merchantReducer,
-  order: orderSlice
+  order: orderSlice,
+  user: userSlice,
 });
 
 const persistConfig = {
   key: 'order', // 用於識別持久化數據的鍵
   storage,
-  whitelist: ['cart', 'order'] // 設置白名單，指定哪些 reducer 的狀態需要被持久化
+  whitelist: ['cart', 'order', 'user'] // 設置白名單，指定哪些 reducer 的狀態需要被持久化
 };
 // 創建持久化 reducer
 const persistedReducer = persistReducer(persistConfig, rootReducer);
