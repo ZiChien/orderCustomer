@@ -20,16 +20,15 @@ function App() {
   `;
   const { data, loading, error } = useQuery(GET_ALL_MERCHANTS);
   useEffect(() => {
-    if (!error && data) {
+    if (error) {
+      throw new Response("發生錯誤", { status: 404, statusText: error });
+    }
+    if (data) {
       const merchants = data.getAllMerchants;
       if (merchants.find((item) => item.name === merchant) === undefined) {
-        throw new Response("Merchant not Found", { status: 404 });
+        throw new Response("Merchant not Found", { status: 404, statusText: "Merchant not Found" });
       }
     }
-    // else {
-    //   console.log(error);
-    //   throw new Response("Merchant not Found", { status: 404 });
-    // }
   }, [data, error, merchant]);
 
   const transitions = useTransition(location.pathname, {

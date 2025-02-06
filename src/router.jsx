@@ -9,6 +9,7 @@ import Cart from "./pages/cart/Cart.jsx";
 import Check from "./pages/check/Check.jsx";
 import Confirm from "./pages/confirm/Confirm.jsx";
 import PageError from "./pages/PageError.jsx";
+// import { ErrorBoundary } from "react-error-boundary";
 
 // const router = createBrowserRouter([
 //     {
@@ -26,7 +27,15 @@ import PageError from "./pages/PageError.jsx";
 // ]);
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/:merchant" element={<App />} errorElement={<PageError />}>
+    <Route
+      path="/:merchant"
+      element={
+        // <ErrorBoundary FallbackComponent={Fallback}>
+        // </ErrorBoundary>
+          <App />
+      }
+      errorElement={<PageError />}
+    >
       <Route path="order" element={<Order />} />
       <Route path="cart" element={<Cart />} />
       <Route path="check" element={<Check />} />

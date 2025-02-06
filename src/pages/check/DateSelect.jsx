@@ -34,7 +34,8 @@ export default function DateSelect() {
     })
     const availableDate = data?.getAvailableDate
     useEffect(() => {
-        if (error) throw new Response(error, { status: 404 });
+        if (error) throw new Response("發生錯誤", { status: 404, statusText: error });
+
         if (data) {
             if (!availableDate.length) dispatch(setPickUpDate(''))
                 

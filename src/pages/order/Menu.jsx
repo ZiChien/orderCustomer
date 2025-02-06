@@ -7,6 +7,8 @@ import img1 from "../../assets/item1.jpeg";
 import { useSpring, animated, useTransition } from "@react-spring/web";
 import { useQuery, gql } from "@apollo/client";
 import { useSelector } from "react-redux";
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 Menu.propTypes = {
   isDialogOpen: PropTypes.bool.isRequired,
@@ -61,7 +63,7 @@ function Menu({ isDialogOpen, setIsDialogOpen }) {
       }
     }
   `;
-
+  
   const merchantId = useSelector((state) => state.merchant?.merchantInfo?.id);
 
   const { loading, error, data } = useQuery(GET_MENU, {
@@ -212,6 +214,7 @@ function Menu({ isDialogOpen, setIsDialogOpen }) {
     config: { duration: 100 },
   });
 
+  if(!data) return <Skeleton count={4} className="h-12 line-clamp-6" />
   return (
     <>
       <MenuBar
