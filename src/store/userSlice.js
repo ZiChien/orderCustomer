@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   info: {},
-  currentOrder: null,
 };
 export const userSlice = createSlice({
   name: "user",
@@ -11,11 +10,7 @@ export const userSlice = createSlice({
     setInfo: (state, action) => {
       state.info = action.payload;
     },
-    setCurrentOrder: (state, action) => {
-      state.currentOrder = action.payload;
-    },
   },
 });
-export const { setInfo, setCurrentOrder } = userSlice.actions;
-export const selectCurrentOrder = (state) => state.user.currentOrder;
+export const { setInfo } = userSlice.actions;
 export default userSlice.reducer;

@@ -1,7 +1,6 @@
 import OrderStatus from "./OrderStatus.jsx";
 import { gql, useQuery } from "@apollo/client";
 import { useSelector, useDispatch } from "react-redux";
-import { selectCurrentOrder, setCurrentOrder } from "../../store/userSlice";
 import { useEffect } from "react";
 import dayjs from "dayjs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -9,15 +8,16 @@ import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { getMerchantInfo } from "../../store/merchantSlice.js";
 import { useParams } from "react-router-dom";
 import OrderDetails from "./OrderDetails.jsx";
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 export default function Confirm() {
-  const { merchant } = useParams();
+  const { merchant, orderID } = useParams();
   const dispatch = useDispatch();
   const merchantInfo = useSelector((state) => state.merchant.merchantInfo);
   useEffect(() => {
     dispatch(getMerchantInfo(merchant));
   }, []);
-  const currentOrder = useSelector(selectCurrentOrder);
   const GET_ORDER = gql`
     query GetOrder($input: GetOrderInput!) {
       getOrder(input: $input) {
@@ -74,40 +74,48 @@ export default function Confirm() {
   const { loading, error, data } = useQuery(GET_ORDER, {
     variables: {
       input: {
-        merchantId: currentOrder.merchantId,
-        orderID: currentOrder.orderID,
+        merchantId: merchantInfo?.id,
+        orderID: orderID,
       },
     },
+    skip: !merchantInfo?.id || !orderID,
     pollInterval: 5000,
   });
-
   useEffect(() => {
-    if (data && data.getOrder.length) {
-      console.log(data.getOrder[0]);
-      dispatch(setCurrentOrder(data.getOrder[0]));
-    }
-  }, [data, dispatch]);
+    if (error) throw new Response("發生錯誤", { status: 404, statusText: error });
+    if (data && !data.getOrder.length)
+      throw new Response("找不到此訂單", { status: 404, statusText: 'order not found' });
+  }, [data, error]);
+  const order = data?.getOrder[0];
+
+  if (!order)
+    return (
+      <div className="p-6 pb-10 w-full">
+        <Skeleton count={5} className="h-[30px] my-[10px]" />
+      </div>
+    );
+
   return (
     <div className="p-6 pb-10 w-full">
-      <OrderStatus status={currentOrder.status} />
+      <OrderStatus status={order?.status} />
       <div className="flex flex-col gap-6">
         <div>
           <h6 className="font-semibold text-base mb-2">取餐資訊</h6>
           <div className="flex flex-col gap-1 px-4 border-l-4 border-light-bg-seconds">
             <div className="flex justify-between items-center">
               <span className=" text-sm font-medium">訂單編號</span>
-              <span className=" text-sm">{currentOrder.orderID}</span>
+              <span className=" text-sm">{order?.orderID}</span>
             </div>
             <div className="flex justify-between items-center">
               <span className=" text-sm font-medium">訂單時間</span>
               <span className=" text-sm">
-                {dayjs(currentOrder.createTime).format("YYYY/MM/DD HH:mm")}
+                {dayjs(order?.createTime).format("YYYY/MM/DD HH:mm")}
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span className=" text-sm font-medium">取餐時間</span>
               <span className=" text-sm">
-                {dayjs(currentOrder.pickUpDateTime).format("YYYY/MM/DD HH:mm")}
+                {dayjs(order?.pickUpDateTime).format("YYYY/MM/DD HH:mm")}
               </span>
             </div>
           </div>
@@ -128,7 +136,7 @@ export default function Confirm() {
         </div>
         <div>
           <h6 className="font-semibold text-base mb-2">訂單明細</h6>
-          <OrderDetails content={currentOrder.content} priceList={currentOrder.priceList} />
+          <OrderDetails content={order?.content} priceList={order?.priceList} />
         </div>
       </div>
     </div>

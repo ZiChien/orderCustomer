@@ -16,7 +16,6 @@ import dayjs from "dayjs";
 import { getAmount } from '../../store/cartSlice.js'
 import { useMutation, gql } from '@apollo/client'
 import { persistor } from '../../store'
-import { setCurrentOrder } from '../../store/userSlice.js'
 
 export default function Check() {
     const { merchant } = useParams()
@@ -106,11 +105,10 @@ function ButtonToPlaceOrder() {
             console.log(order);
             
             await createOrder({ variables: { input: order } })
-            dispatch(setCurrentOrder(order))
             await persistor.purge()
             console.log('purfgge');
             
-            navigate('../confirm', { replace: true })
+            navigate(`../confirm/${order.orderID}`, { replace: true })
 
         } catch (error) {
             console.log(error);

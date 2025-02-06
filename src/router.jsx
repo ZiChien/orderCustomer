@@ -39,7 +39,7 @@ const router = createBrowserRouter(
       <Route path="order" element={<Order />} />
       <Route path="cart" element={<Cart />} />
       <Route path="check" element={<Check />} />
-      <Route path="confirm" element={<Confirm />} />
+      <Route path="confirm/:orderID" element={<Confirm />} />
     </Route>
   )
 );
