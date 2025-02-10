@@ -39,15 +39,18 @@ function App() {
   }, [data, error, merchant]);
   function initLiff() {
     liff.init(
-      { liffId: "2006877345-mMM79BXz", withLoginOnExternalBrowser: true },
+      { liffId: "2006877345-mMM79BXz" },
       async function () {
+        if (!liff.isInClient() && !liff.isLoggedIn()) {
+          liff.login({ redirectUri: window.location.href });
+        }
         if (liff.isLoggedIn()) {
           const accessToken = liff.getAccessToken();
           const profile = await liff.getProfile();
           dispatch(setProfile(profile));
           dispatch(setAccessToken(accessToken));
-        }else{
-          console.log('Line login failed');
+        } else {
+          console.log("Line login failed");
         }
       },
       function (error) {
