@@ -58,6 +58,7 @@ function ButtonToPlaceOrder() {
     const priceList = useSelector(state => state.cart.priceList)
     const totalPrice = priceList.reduce((acc, item) => acc + item.price, 0)
     const customer = useSelector(state => state.order.customer)
+    const profile = useSelector(state => state.user.profile)
     const remark = useSelector(state => state.order.remark)
     const tableware = useSelector(state => state.order.tableware)
     const amount = useSelector(getAmount)
@@ -89,7 +90,7 @@ function ButtonToPlaceOrder() {
             customer: {
                 name: customer.name,
                 phone: customer.phone,
-                userId: "",
+                userId: profile?.userId,
             },
             priceList: priceList,
             amount,

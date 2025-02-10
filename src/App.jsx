@@ -3,8 +3,11 @@ import "./App.css";
 import { Outlet, useLocation, useParams } from "react-router-dom";
 import { useTransition, animated } from "@react-spring/web";
 import { useQuery, gql } from "@apollo/client";
-
+import liff from "@line/liff";
+import { setProfile, setAccessToken } from "./store/userSlice";
+import { useDispatch } from "react-redux";
 function App() {
+  const dispatch = useDispatch();
   const location = useLocation();
   const { merchant } = useParams();
   const GET_ALL_MERCHANTS = gql`
@@ -26,10 +29,32 @@ function App() {
     if (data) {
       const merchants = data.getAllMerchants;
       if (merchants.find((item) => item.name === merchant) === undefined) {
-        throw new Response("Merchant not Found", { status: 404, statusText: "Merchant not Found" });
+        throw new Response("Merchant not Found", {
+          status: 404,
+          statusText: "Merchant not Found",
+        });
       }
+      initLiff();
     }
   }, [data, error, merchant]);
+  function initLiff() {
+    liff.init(
+      { liffId: "2006877345-mMM79BXz", withLoginOnExternalBrowser: true },
+      async function () {
+        if (liff.isLoggedIn()) {
+          const accessToken = liff.getAccessToken();
+          const profile = await liff.getProfile();
+          dispatch(setProfile(profile));
+          dispatch(setAccessToken(accessToken));
+        }else{
+          console.log('Line login failed');
+        }
+      },
+      function (error) {
+        console.error(error);
+      }
+    );
+  }
 
   const transitions = useTransition(location.pathname, {
     from: { opacity: 0 },

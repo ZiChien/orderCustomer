@@ -3,7 +3,7 @@ import { useSpring, useSprings, animated } from "@react-spring/web";
 
 export default function OrderStatus({ status }) {
   const statusMap = new Map([
-    ["PENDING", "等待商家確認中..."],
+    ["PENDING", "訂單已送出，待餐廳確認中..."],
     ["CONFIRMED", "商家已確認訂單，等待製作..."],
     ["READY", "餐點已準備完成，等待取餐..."],
     ["COMPLETED", "訂單已完成"],

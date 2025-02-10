@@ -68,6 +68,7 @@ export default function Confirm() {
         pickUpDateTime
         status
         createTime
+        number
       }
     }
   `;
@@ -82,9 +83,13 @@ export default function Confirm() {
     pollInterval: 5000,
   });
   useEffect(() => {
-    if (error) throw new Response("發生錯誤", { status: 404, statusText: error });
+    if (error)
+      throw new Response("發生錯誤", { status: 404, statusText: error });
     if (data && !data.getOrder.length)
-      throw new Response("找不到此訂單", { status: 404, statusText: 'order not found' });
+      throw new Response("找不到此訂單", {
+        status: 404,
+        statusText: "order not found",
+      });
   }, [data, error]);
   const order = data?.getOrder[0];
 
@@ -103,19 +108,19 @@ export default function Confirm() {
           <h6 className="font-semibold text-base mb-2">取餐資訊</h6>
           <div className="flex flex-col gap-1 px-4 border-l-4 border-light-bg-seconds">
             <div className="flex justify-between items-center">
-              <span className=" text-sm font-medium">訂單編號</span>
-              <span className=" text-sm">{order?.orderID}</span>
+              <span className=" text-sm font-medium">訂單號碼</span>
+              <span className=" text-sm">#{order?.number}</span>
             </div>
             <div className="flex justify-between items-center">
-              <span className=" text-sm font-medium">訂單時間</span>
+              <span className=" text-sm font-medium">下單時間</span>
               <span className=" text-sm">
-                {dayjs(order?.createTime).format("YYYY/MM/DD HH:mm")}
+                {dayjs(order?.createTime).format("YYYY/MM/DD HH:mm (ddd)")}
               </span>
             </div>
             <div className="flex justify-between items-center">
               <span className=" text-sm font-medium">取餐時間</span>
               <span className=" text-sm">
-                {dayjs(order?.pickUpDateTime).format("YYYY/MM/DD HH:mm")}
+                {dayjs(order?.pickUpDateTime).format("YYYY/MM/DD HH:mm (ddd)")}
               </span>
             </div>
           </div>
