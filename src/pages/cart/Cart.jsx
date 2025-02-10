@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
-import { getMerchantInfo } from '../../store/merchantSlice'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 import Navbar from '../../components/Navbar.jsx'
 import CartContent from './CartContent.jsx'
@@ -14,14 +13,9 @@ import { faDollarSign, faXmark } from '@fortawesome/free-solid-svg-icons'
 
 
 export default function Cart() {
-    const { merchant } = useParams()
-    const dispatch = useDispatch()
     const navigate = useNavigate();
     const cart = useSelector(state => state.cart.value)
     const merchantInfo = useSelector(state => state.merchant.merchantInfo)
-    useEffect(() => {
-        dispatch(getMerchantInfo(merchant))
-    }, [])
     useEffect(() => {
         if (cart.length === 0) {
             navigate('../order', { replace: true })

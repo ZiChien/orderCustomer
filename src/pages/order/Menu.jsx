@@ -7,8 +7,8 @@ import img1 from "../../assets/item1.jpeg";
 import { useSpring, animated, useTransition } from "@react-spring/web";
 import { useQuery, gql } from "@apollo/client";
 import { useSelector } from "react-redux";
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
+import Skeleton from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 Menu.propTypes = {
   isDialogOpen: PropTypes.bool.isRequired,
@@ -63,7 +63,7 @@ function Menu({ isDialogOpen, setIsDialogOpen }) {
       }
     }
   `;
-  
+
   const merchantId = useSelector((state) => state.merchant?.merchantInfo?.id);
 
   const { loading, error, data } = useQuery(GET_MENU, {
@@ -71,6 +71,8 @@ function Menu({ isDialogOpen, setIsDialogOpen }) {
     skip: !merchantId,
   });
   useEffect(() => {
+    if (error)
+      throw new Response("發生錯誤", { status: 404, statusText: error });
     if (data) {
       setMenu(data.getMenu[0].categories);
     }
@@ -174,9 +176,7 @@ function Menu({ isDialogOpen, setIsDialogOpen }) {
     function handleCurrentCategory() {
       // find the last category in viewport and set it as current category
       const newArray = Array.from(isInViewPortRef.current);
-      let newCategory = newArray.findLast(
-        (item) => item[1] === true
-      )[0];
+      let newCategory = newArray.findLast((item) => item[1] === true)[0];
       const newCurrentCategory = category.find(
         (item) => item.keyName === newCategory
       );
@@ -214,7 +214,7 @@ function Menu({ isDialogOpen, setIsDialogOpen }) {
     config: { duration: 100 },
   });
 
-  if(!data) return <Skeleton count={4} className="h-12 line-clamp-6" />
+  if (!data) return <Skeleton count={4} className="h-12 line-clamp-6" />;
   return (
     <>
       <MenuBar

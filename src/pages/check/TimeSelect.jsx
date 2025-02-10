@@ -45,7 +45,8 @@ export default function TimeSelect() {
     const availableTime = data ? data.getAvailableTime : []
 
     useEffect(() => {
-        if (error) throw new Response(error, { status: 404 });
+        if (error) throw new Response("發生錯誤", { status: 404, statusText: error });
+
         if (data) {
             if (!availableTime.length) dispatch(setPickUpTime(''))
 

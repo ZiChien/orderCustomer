@@ -1,23 +1,18 @@
 import OrderStatus from "./OrderStatus.jsx";
 import { gql, useQuery } from "@apollo/client";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useEffect } from "react";
 import dayjs from "dayjs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
-import { getMerchantInfo } from "../../store/merchantSlice.js";
 import { useParams } from "react-router-dom";
 import OrderDetails from "./OrderDetails.jsx";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 export default function Confirm() {
-  const { merchant, orderID } = useParams();
-  const dispatch = useDispatch();
+  const { orderID } = useParams();
   const merchantInfo = useSelector((state) => state.merchant.merchantInfo);
-  useEffect(() => {
-    dispatch(getMerchantInfo(merchant));
-  }, []);
   const GET_ORDER = gql`
     query GetOrder($input: GetOrderInput!) {
       getOrder(input: $input) {
@@ -86,10 +81,8 @@ export default function Confirm() {
     if (error)
       throw new Response("發生錯誤", { status: 404, statusText: error });
     if (data && !data.getOrder.length)
-      throw new Response("找不到此訂單", {
-        status: 404,
-        statusText: "order not found",
-      });
+      throw new Error("此頁面不存在", { cause: "This page doesn't exist!" });
+      
   }, [data, error]);
   const order = data?.getOrder[0];
 

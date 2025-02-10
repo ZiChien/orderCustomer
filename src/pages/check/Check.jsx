@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
 import Navbar from '../../components/Navbar.jsx'
 import { useSelector, useDispatch } from 'react-redux'
-import { getMerchantInfo } from '../../store/merchantSlice'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowLeft, faDollarSign } from '@fortawesome/free-solid-svg-icons'
-import { useNavigate, useParams } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import Method from './Method.jsx'
 import CustomerInfo from './CustomerInfo.jsx'
 import PickUp from './PickUp.jsx'
@@ -18,16 +17,13 @@ import { useMutation, gql } from '@apollo/client'
 import { persistor } from '../../store'
 
 export default function Check() {
-    const { merchant } = useParams()
     const navigate = useNavigate();
-    const dispatch = useDispatch()
     const cart = useSelector(state => state.cart.value)
     const merchantInfo = useSelector(state => state.merchant.merchantInfo)
     useEffect(() => {
         if (cart.length === 0) {
             navigate('../order', { replace: true })
         }
-        dispatch(getMerchantInfo(merchant))
     }, [])
     return (
         <>
@@ -81,6 +77,9 @@ function ButtonToPlaceOrder() {
             createOrder(input: $input)
         }
     `);
+    useEffect(()=>{
+        if(error) throw new Response("發生錯誤", { status: 404, statusText: error });
+    },[error])
     const handleSubmit = async () => {
         const order = {
             orderID: new Date().getTime(),

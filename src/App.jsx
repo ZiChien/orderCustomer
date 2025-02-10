@@ -5,14 +5,17 @@ import { useTransition, animated } from "@react-spring/web";
 import { useQuery, gql } from "@apollo/client";
 import liff from "@line/liff";
 import { setProfile, setAccessToken } from "./store/userSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Helmet } from "react-helmet-async";
+import { setMerchantInfo } from "./store/merchantSlice";
 function App() {
   const dispatch = useDispatch();
   const location = useLocation();
   const { merchant } = useParams();
-  const GET_ALL_MERCHANTS = gql`
-    query GetAllMerchants {
-      getAllMerchants {
+  const merchantInfo = useSelector((state) => state.merchant.merchantInfo);
+  const GET_MERCHANT = gql`
+    query GetMerchant($name: String!) {
+      getMerchant(name: $name) {
         id
         name
         displayName
@@ -21,43 +24,44 @@ function App() {
       }
     }
   `;
-  const { data, loading, error } = useQuery(GET_ALL_MERCHANTS);
+
+  const { data, loading, error } = useQuery(GET_MERCHANT, {
+    variables: { name: merchant },
+  });
   useEffect(() => {
     if (error) {
       throw new Response("發生錯誤", { status: 404, statusText: error });
     }
     if (data) {
-      const merchants = data.getAllMerchants;
-      if (merchants.find((item) => item.name === merchant) === undefined) {
-        throw new Response("Merchant not Found", {
-          status: 404,
-          statusText: "Merchant not Found",
-        });
+      const merchant = data.getMerchant;
+      if (merchant === null) {
+        throw new Error("此頁面不存在", { cause: "This page doesn't exist!" });
       }
+      dispatch(setMerchantInfo(merchant));
       initLiff();
     }
-  }, [data, error, merchant]);
-  function initLiff() {
-    liff.init(
-      { liffId: "2006877345-mMM79BXz" },
-      async function () {
-        if (!liff.isInClient() && !liff.isLoggedIn()) {
-          liff.login({ redirectUri: window.location.href });
+    function initLiff() {
+      liff.init(
+        { liffId: "2006877345-mMM79BXz" },
+        async function () {
+          if (!liff.isInClient() && !liff.isLoggedIn()) {
+            liff.login({ redirectUri: window.location.href });
+          }
+          if (liff.isLoggedIn()) {
+            const accessToken = liff.getAccessToken();
+            const profile = await liff.getProfile();
+            dispatch(setProfile(profile));
+            dispatch(setAccessToken(accessToken));
+          } else {
+            console.log("Line login failed");
+          }
+        },
+        function (error) {
+          console.error(error);
         }
-        if (liff.isLoggedIn()) {
-          const accessToken = liff.getAccessToken();
-          const profile = await liff.getProfile();
-          dispatch(setProfile(profile));
-          dispatch(setAccessToken(accessToken));
-        } else {
-          console.log("Line login failed");
-        }
-      },
-      function (error) {
-        console.error(error);
-      }
-    );
-  }
+      );
+    }
+  }, [data, error, merchant, dispatch]);
 
   const transitions = useTransition(location.pathname, {
     from: { opacity: 0 },
@@ -75,9 +79,19 @@ function App() {
   });
   return transitions((style, location) => {
     return (
-      <animated.div style={{ ...style, position: "absolute", width: "100vw" }}>
+      <>
+      {
+        merchantInfo &&
+        <Helmet>
+          <title>{merchantInfo.name} | ZCorder</title>
+        </Helmet>
+      }
+      <animated.div
+        style={{ ...style, position: "absolute", width: "100vw" }}
+      >
         <Outlet />
       </animated.div>
+      </>
     );
   });
 }

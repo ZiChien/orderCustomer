@@ -18,7 +18,7 @@ function PriceList() {
         name: "小計",
         price: cart.length
           ? cart.reduce(
-              (acc, item) => acc + item.product.price * item.amount,
+              (acc, item) => acc + item.product.price * item.amount,// todo: item.price * item.amount item.price is total price include option price
               0
             )
           : undefined,
