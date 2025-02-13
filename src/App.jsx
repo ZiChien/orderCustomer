@@ -44,9 +44,9 @@ function App() {
       liff.init(
         { liffId: "2006877345-mMM79BXz" },
         async function () {
-          if (!liff.isInClient() && !liff.isLoggedIn()) {
-            liff.login({ redirectUri: window.location.href });
-          }
+          // if (!liff.isInClient() && !liff.isLoggedIn()) {
+          //   liff.login({ redirectUri: window.location.href });
+          // }
           if (liff.isLoggedIn()) {
             const accessToken = liff.getAccessToken();
             const profile = await liff.getProfile();

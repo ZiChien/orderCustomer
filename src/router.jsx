@@ -2,6 +2,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
+  Navigate
 } from "react-router-dom";
 import App from "./App.jsx";
 import Order from "./pages/order/Order.jsx";
@@ -36,6 +37,7 @@ const router = createBrowserRouter(
       }
       errorElement={<PageError />}
     >
+      <Route index element={<Navigate to="./order" replace />} />
       <Route path="order" element={<Order />} />
       <Route path="cart" element={<Cart />} />
       <Route path="check" element={<Check />} />
