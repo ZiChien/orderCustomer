@@ -28,15 +28,18 @@ export default function Cart() {
 
     return (
         <>
-            <Navbar title={'購物車'} merchantName={merchantInfo?.name} handleClick={handleClick} icon={<FontAwesomeIcon icon={faXmark} size='xl' />} />
-            <div className='pb-[112px]'>
+            <div className='flex flex-col h-full'>
+                <Navbar title={'購物車'} merchantName={merchantInfo?.name} handleClick={handleClick} icon={<FontAwesomeIcon icon={faXmark} size='xl' />} />
+                <div className="grow">
+
                 <CartContent />
+                </div>
                 <div className='px-4'>
                     <PriceList />
                 </div>
-                <ButtonToCheck />
                 <Tableware />
                 <Remark />
+                <ButtonToCheck />
             </div>
         </>
     )
@@ -50,7 +53,7 @@ function ButtonToCheck() {
         navagate('../check', { replace: true })
     }
     return (
-        <div className='  fixed bottom-0 z-30 left-0 w-full p-4'>
+        <div className=' sticky bottom-0 z-30 left-0 w-full p-4'>
             <div className=' bg-light-bg-theme rounded-lg'>
                 <div className='px-4 py-2 flex justify-between items-center gap-1 text-sm font-medium'>
                     應付金額:

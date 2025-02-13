@@ -122,9 +122,9 @@ function MenuDialog({ product, handleClose }) {
 
 
     return (
-        <div id="dialog" className="fixed top-0 left-0 w-screen h-screen bg-gray-600/60">
-            <div className="fixed w-full h-[80vh] overflow-auto bottom-0 p-2 pb-16 left-0 rounded-t-lg bg-white">
-                <div className=" h-1/5">
+        <div id="dialog" className=" sticky top-0 left-0 w-full h-full bg-gray-600/60">
+            <div className="absolute max-h-full bottom-0 left-0 w-full overflow-auto rounded-t-lg bg-white">
+                <div className="h-[20vh]">
                     <div onClick={handleClose} className="absolute right-1 top-1 w-[36px] h-[36px] flex justify-center items-center bg-white rounded-lg"><FontAwesomeIcon icon={faXmark} size="xl" /></div>
                     <img src={img1} alt="" className="h-full w-full object-cover rounded-lg" />
                 </div>
@@ -135,7 +135,7 @@ function MenuDialog({ product, handleClose }) {
                         {SelectMtlList}
                     </div>
                 </div>
-                <div className="fixed left-0 bottom-0 bg-light-bg w-full px-8 py-3 border-t-2">
+                <div className=" sticky left-0 bottom-0 bg-light-bg w-full px-8 py-3 border-t-2">
                     <div className="flex gap-8">
                         <Counter count={amount} handleClickPlus={handleClickPlus} handleClickMinus={handleClickMinus} minCount={1} />
                         <button onClick={handleClickAddToCart} className=" grow py-3     bg-button-check text-white rounded-lg font-semibold">加入購物車</button>

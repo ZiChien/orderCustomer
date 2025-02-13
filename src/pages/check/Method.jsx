@@ -14,9 +14,9 @@ export default function Delivery() {
             <button onClick={() => handleClick(true)} className={clsx('text-sm font-semibold p-2 px-6 rounded-lg text-button-check/60 border-2 bg-light-bg shadow-inner', {
                 ' !text-button-check !bg-light-bg-theme': isPickup,
             })}>自取</button>
-            <button onClick={() => handleClick(false)} className={clsx('text-sm font-semibold p-2 px-6 rounded-lg text-button-check/60 border-2 bg-light-bg shadow-inner', {
+            {/* <button onClick={() => handleClick(false)} className={clsx('text-sm font-semibold p-2 px-6 rounded-lg text-button-check/60 border-2 bg-light-bg shadow-inner', {
                 ' !text-button-check !bg-light-bg-theme': !isPickup,
-            })}>外送</button>
+            })}>外送</button> */}
         </div>
     )
 }

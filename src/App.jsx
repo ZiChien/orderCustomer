@@ -80,17 +80,17 @@ function App() {
   return transitions((style, location) => {
     return (
       <>
-      {
-        merchantInfo &&
-        <Helmet>
-          <title>{merchantInfo.name} | ZCorder</title>
-        </Helmet>
-      }
-      <animated.div
-        style={{ ...style, position: "absolute", width: "100vw" }}
-      >
-        <Outlet />
-      </animated.div>
+        {merchantInfo && (
+          <Helmet>
+            <title>{merchantInfo.name} | ZCorder</title>
+          </Helmet>
+        )}
+        <animated.div
+          className={"w-full max-w-[768px] h-screen m-auto md:border-x-2 md:shadow-lg"}
+          style={{ ...style }}
+        >
+          <Outlet />
+        </animated.div>
       </>
     );
   });

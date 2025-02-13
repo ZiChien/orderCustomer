@@ -27,23 +27,26 @@ export default function Check() {
     }, [])
     return (
         <>
-            <Navbar title={'確認訂單'} merchantName={merchantInfo?.name} icon={<FontAwesomeIcon icon={faArrowLeft} size='lg' />} handleClick={() => navigate('../cart', { replace: true })} />
-            <div className='px-4 py-4 flex flex-col gap-6 pb-[112px]'>
-                <div className=''>
-                    <h5 className=" text-base font-semibold my-2">取餐資訊</h5>
-                    <div className='px-3 flex flex-col gap-2 border-l-4 border-light-bg-seconds'>
-                        <Method />
-                        <PickUp />
+            <div className='flex flex-col h-full'>
+                <Navbar title={'確認訂單'} merchantName={merchantInfo?.name} icon={<FontAwesomeIcon icon={faArrowLeft} size='lg' />} handleClick={() => navigate('../cart', { replace: true })} />
+                <div className='px-4 flex flex-col gap-6 grow'>
+                    <div className='mt-4'>
+                        <h5 className=" text-base font-semibold my-2">取餐資訊</h5>
+                        <div className='px-3 flex flex-col gap-2 border-l-4 border-light-bg-seconds'>
+                            <Method />
+                            <PickUp />
+                        </div>
                     </div>
+                    <div className=''>
+                        <CustomerInfo />
+                    </div>
+                    <div className='grow'>
+                        <OrderList />
+                    </div>
+                    <ButtonToPlaceOrder />
                 </div>
-                <div className=''>
-                    <CustomerInfo />
-                </div>
-                <div>
-                    <OrderList />
-                </div>
-                <ButtonToPlaceOrder />
             </div>
+
         </>
     )
 }
@@ -116,7 +119,7 @@ function ButtonToPlaceOrder() {
     }
 
     return (
-        <div className='  fixed bottom-0 z-30 left-0 w-full p-4'>
+        <div className='sticky bottom-0 z-30 left-0 w-full py-4'>
             <div className=' bg-light-bg-theme rounded-lg'>
                 <div className='px-4 py-2 flex justify-between items-center gap-1 text-sm font-medium'>
                     應付金額:

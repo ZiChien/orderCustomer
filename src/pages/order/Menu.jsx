@@ -13,9 +13,11 @@ import "react-loading-skeleton/dist/skeleton.css";
 Menu.propTypes = {
   isDialogOpen: PropTypes.bool.isRequired,
   setIsDialogOpen: PropTypes.func.isRequired,
+  dialogProduct: PropTypes.object.isRequired,
+  setDialogProduct: PropTypes.func.isRequired,
 };
 
-function Menu({ isDialogOpen, setIsDialogOpen }) {
+function Menu({ isDialogOpen, setIsDialogOpen, dialogProduct, setDialogProduct }) {
   // Add PropTypes validation
   const [menu, setMenu] = useState([]);
   const category = menu.map((item) => {
@@ -196,23 +198,12 @@ function Menu({ isDialogOpen, setIsDialogOpen }) {
       }
     });
   });
-
-  const [dialogProduct, setDialogProduct] = useState({});
   const handleClick = (product) => {
     setIsDialogOpen(true);
     setDialogProduct(product);
     document.body.style.overflow = "hidden";
   };
-  const handleClose = () => {
-    setIsDialogOpen(false);
-    document.body.style.overflow = "auto";
-  };
-  const transitions = useTransition(isDialogOpen, {
-    from: { opacity: 0 },
-    enter: { opacity: 1 },
-    leave: { opacity: 0 },
-    config: { duration: 100 },
-  });
+
 
   if (!data) return <Skeleton count={4} className="h-12 line-clamp-6" />;
   return (
@@ -223,15 +214,7 @@ function Menu({ isDialogOpen, setIsDialogOpen }) {
         handleClickCategory={handleClickCategory}
       />
       <div className="py-1">{menuList}</div>
-      {transitions((style, isDialogOpen) => {
-        return (
-          isDialogOpen && (
-            <animated.div style={style}>
-              <MenuDialog product={dialogProduct} handleClose={handleClose} />
-            </animated.div>
-          )
-        );
-      })}
+      
     </>
   );
 }
