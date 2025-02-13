@@ -37,7 +37,6 @@ const router = createBrowserRouter(
       }
       errorElement={<PageError />}
     >
-      <Route index element={<Navigate to="./order" replace />} />
       <Route path="order" element={<Order />} />
       <Route path="cart" element={<Cart />} />
       <Route path="check" element={<Check />} />
