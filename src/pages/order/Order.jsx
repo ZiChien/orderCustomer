@@ -23,7 +23,7 @@ export default function Order() {
   });
   return (
     <>
-      <div className="px-6 w-full h-full overflow-auto flex flex-col">
+      <div className="px-6 w-full min-h-screen flex flex-col flex-1 shrink-0 basis-auto">
         <MerchantInfo />
         <div className="grow">
           <Menu
@@ -40,7 +40,7 @@ export default function Order() {
           isDialogOpen && (
             <animated.div
               style={style}
-              className={"sticky left-0 bottom-0 w-full h-screen"}
+              className={"fixed left-0 bottom-0 w-full h-full"}
             >
               <MenuDialog product={dialogProduct} handleClose={handleClose} />
             </animated.div>

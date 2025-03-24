@@ -27,7 +27,7 @@ export default function Check() {
     }, [])
     return (
         <>
-            <div className='flex flex-col h-full'>
+            <div className='flex flex-col min-h-screen'>
                 <Navbar title={'確認訂單'} merchantName={merchantInfo?.name} icon={<FontAwesomeIcon icon={faArrowLeft} size='lg' />} handleClick={() => navigate('../cart', { replace: true })} />
                 <div className='px-4 flex flex-col gap-6 grow'>
                     <div className='mt-4'>

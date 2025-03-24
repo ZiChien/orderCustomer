@@ -86,7 +86,7 @@ function App() {
           </Helmet>
         )}
         <animated.div
-          className={"w-full max-w-[768px] h-screen m-auto md:border-x-2 md:shadow-lg"}
+          className={"w-full max-w-[768px] min-h-full m-auto flex flex-col md:border-x-2 md:shadow-lg touch-manipulation"}
           style={{ ...style }}
         >
           <Outlet />

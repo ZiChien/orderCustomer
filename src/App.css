@@ -1,1 +1,3 @@
-  
+.viewportHightLayout {
+    @apply w-full max-w-[768px] min-h-full m-auto md:border-x-2 md:shadow-lg touch-manipulation
+}

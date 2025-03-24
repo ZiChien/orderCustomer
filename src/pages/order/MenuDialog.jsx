@@ -122,24 +122,22 @@ function MenuDialog({ product, handleClose }) {
 
 
     return (
-        <div id="dialog" className=" sticky top-0 left-0 w-full h-full bg-gray-600/60">
-            <div className="absolute max-h-full bottom-0 left-0 w-full overflow-auto rounded-t-lg bg-white">
-                <div className="h-[20vh]">
-                    <div onClick={handleClose} className="absolute right-1 top-1 w-[36px] h-[36px] flex justify-center items-center bg-white rounded-lg"><FontAwesomeIcon icon={faXmark} size="xl" /></div>
-                    <img src={img1} alt="" className="h-full w-full object-cover rounded-lg" />
+        <div className="max-h-full bottom-0 left-0 z-10 w-full h-full flex flex-col overflow-auto rounded-t-lg bg-white viewportHightLayout">
+            <div className="relative h-[20vh] grow">
+                <div onClick={handleClose} className="absolute right-4 top-4 w-[36px] h-[36px] flex justify-center items-center bg-white rounded-lg"><FontAwesomeIcon icon={faXmark} size="xl" /></div>
+                <img src={img1} alt="" className="h-full w-full object-cover rounded-lg" />
+            </div>
+            <div className="px-2 py-4">
+                <h4 className=" font-medium my-1">{product.productDisplayName}</h4>
+                <p className="text-sm font-medium">{itemInfo}</p>
+                <div className="py-4 divide-y-2">
+                    {SelectMtlList}
                 </div>
-                <div className="px-2 py-4">
-                    <h4 className=" font-medium my-1">{product.productDisplayName}</h4>
-                    <p className="text-sm font-medium">{itemInfo}</p>
-                    <div className="py-4 divide-y-2">
-                        {SelectMtlList}
-                    </div>
-                </div>
-                <div className=" sticky left-0 bottom-0 bg-light-bg w-full px-8 py-3 border-t-2">
-                    <div className="flex gap-8">
-                        <Counter count={amount} handleClickPlus={handleClickPlus} handleClickMinus={handleClickMinus} minCount={1} />
-                        <button onClick={handleClickAddToCart} className=" grow py-3     bg-button-check text-white rounded-lg font-semibold">加入購物車</button>
-                    </div>
+            </div>
+            <div className=" sticky left-0 bottom-0 bg-light-bg w-full px-8 py-3 border-t-2">
+                <div className="flex gap-8">
+                    <Counter count={amount} handleClickPlus={handleClickPlus} handleClickMinus={handleClickMinus} minCount={1} />
+                    <button onClick={handleClickAddToCart} className=" grow py-3     bg-button-check text-white rounded-lg font-semibold">加入購物車</button>
                 </div>
             </div>
         </div>
