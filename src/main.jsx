@@ -10,10 +10,12 @@ import { ApolloProvider } from "@apollo/client";
 import client from "./apolloClient";
 import { HelmetProvider } from "react-helmet-async";
 import * as Sentry from "@sentry/react";
-Sentry.init({
-  dsn: "https://613595ded7fbc79f20191eaac5f2b1a3@o4509099648024576.ingest.us.sentry.io/4509099650056192"
-});
-
+if (import.meta.env.MODE === "production") {
+  Sentry.init({
+    dsn: "https://f64e41c47d728d3041f7a9a9adde10ff@o4509099648024576.ingest.us.sentry.io/4509099653070848",
+    integrations: [Sentry.browserTracingIntegration()],
+  });
+}
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <HelmetProvider>
