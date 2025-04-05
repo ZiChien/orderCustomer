@@ -80,6 +80,7 @@ function App() {
   return transitions((style, location) => {
     return (
       <>
+      <button className="p-3 bg-red-400" onClick={() => {throw new Error("This is your first error!");}}>Break the world</button>;
         {merchantInfo && (
           <Helmet>
             <title>{merchantInfo.name} | ZCorder</title>
